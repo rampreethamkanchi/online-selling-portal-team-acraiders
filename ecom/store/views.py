@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from .forms import SignUpForm
+import requests
+import json 
 # Create your views here.
 def category(request,foo):
     try:
@@ -23,6 +25,19 @@ def home(request):
     return render(request,'home.html',{'products': products})
 
 def about(request):
+    # Product.objects.all().delete()
+    # Category.objects.all().delete()
+    # res = requests.get('https://fakestoreapi.com/products/categories')
+    # response = json.loads(res.text)
+    # for x in response:
+    #     Category.objects.create(name= x)
+    # res = requests.get('https://fakestoreapi.com/products')
+    # response = json.loads(res.text)
+    # print(response)
+    # for x in response:
+    #     category = Category.objects.get_or_create(name=x['category'])[0]
+    #     Product.objects.create(p_name=x['title'], price=x['price'], category=category, description=x['description'], image=x['image'], is_sale=True, sale_price=x['price']*0.8)
+        # Product.objects.create(p_name=x['title', ])
     
     return render(request,'about.html')
 

@@ -30,7 +30,7 @@ class Product(models.Model):  # Renamed from Products to Product (singular)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
     description = models.TextField()
     image = models.ImageField(upload_to='uploads/product/')
-    slug = models.SlugField(unique=True, max_length=100,)
+    # slug = models.SlugField(unique=True, max_length=100,)
 
     # Add sales stuff
     is_sale = models.BooleanField(default=False)
