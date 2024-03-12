@@ -16,12 +16,12 @@
         <div class="col-8 mx-auto">
             <center>
                 
-                <form method="post" action="{% url 'register' %}">
+                <form method="POST" action="{% url 'register' %}">
                     {% csrf_token %}
                     {{form.as_p}}
                     <br><br>
                     <button type="submit" class="btn btn-secondary">Register</button>
-
+                </form>
             </center>
             
         </div>
