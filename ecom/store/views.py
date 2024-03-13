@@ -39,7 +39,25 @@ def about(request):
     #     Product.objects.create(p_name=x['title'], price=x['price'], category=category, description=x['description'], image=x['image'], is_sale=True, sale_price=x['price']*0.8)
         # Product.objects.create(p_name=x['title', ])
     
+    # res = requests.get('https://fakestoreapi.com/products')
+    # response = json.loads(res.text)
+    # # print(response)
+    # for x in response:
+    #     url= x['image']
+    #     resp = requests.get(url)
+    #     with open('media/products/'+str(x['id'])+'.jpg', 'wb') as f:
+    #         f.write(resp.content)
+        # category = Category.objects.get_or_create(name=x['category'])[0]
+        # Product.objects.create(p_name=x['title'], price=x['price'], category=category, description=x['description'], image=x['image'], is_sale=True, sale_price=x['price']*0.8)
+    # return render(request,'about.html')
+    # res = requests.get('https://fakestoreapi.com/products')
+    # response = json.loads(res.text)
+    # print(response)
+    # for x in response:
+    #     category = Category.objects.get_or_create(name=x['category'])[0]
+    #     Product.objects.create(p_name=x['title'], price=x['price'], category=category, description=x['description'], image='products/'+str(x['id'])+'.jpg', is_sale=True, sale_price=x['price']*0.8)
     return render(request,'about.html')
+    # return redirect('home')
 
 def login_user(request):
     if request.method == "POST":

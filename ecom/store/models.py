@@ -29,7 +29,7 @@ class Product(models.Model):  # Renamed from Products to Product (singular)
     price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
     description = models.TextField()
-    image = models.ImageField(upload_to='uploads/product/')
+    image = models.ImageField(upload_to='products/')
     # slug = models.SlugField(unique=True, max_length=100,)
 
     # Add sales stuff
