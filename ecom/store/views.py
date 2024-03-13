@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from .forms import SignUpForm
+from django.db.models import Q
 import requests
 import json 
 # Create your views here.
@@ -95,4 +96,10 @@ def register_user(request):
             return redirect('register')
     else:     
         return render(request,'register.html',{'form':form})
-    
+def search(request):
+    if request.method == "POST":
+        search = request.POST['search']
+        res = Product.objects.filter(Q(p_name__icontains=search) | Q(description__icontains=search))
+    return render(request,'search.html',{'products':res, 'searched':search})
+def sell(request):
+    return render(request,'sell.html')
