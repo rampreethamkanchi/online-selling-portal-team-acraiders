@@ -1,11 +1,12 @@
 from django.shortcuts import render,redirect
-from .models import Category, Product
+from .models import Category, Product, Customer, Order
 from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .forms import SignUpForm
+from .forms import SignUpForm, ProductForm
 from django.db.models import Q
 import requests
 import json 
@@ -87,12 +88,24 @@ def register_user(request):
             form.save()
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
-            user=authenticate(username=username,password=password)
-            login(request,user)
-            messages.success(request,("you have Registered ..."))
-            return redirect('home')
+            email = form.cleaned_data['email']
+            user=authenticate(username=username,password=password,email=email)
+            if user is not None:               
+                customer=Customer.objects.create(
+                user=user,
+                city=form.cleaned_data['city'],
+                phone=form.cleaned_data['phone']
+                )
+                customer.save()
+                login(request,user)
+                messages.success(request,("you have Registered ..."))
+                return redirect('home')
+            else:
+                messages.success(request,("Sorry...... There was problem in registering, please try again...."))
+                return redirect('register')
         else:
-            messages.success(request,("Whoops...... There was problem in registering"))
+            # messages.success(request,("Whoops...... Form data is invalid...."))
+            messages.success(request,(str(form.errors)))
             return redirect('register')
     else:     
         return render(request,'register.html',{'form':form})
@@ -101,5 +114,23 @@ def search(request):
         search = request.POST['search']
         res = Product.objects.filter(Q(p_name__icontains=search) | Q(description__icontains=search))
     return render(request,'search.html',{'products':res, 'searched':search})
+@login_required(login_url='login')
 def sell(request):
-    return render(request,'sell.html')
+    form = ProductForm()
+    if request.method == "POST":
+        print('post requested....')
+        form = ProductForm(request.POST,request.FILES)
+        if form.is_valid():
+            form.seller = request.user
+            form.save()
+            messages.success(request,("product has been Registered ..."))
+            return redirect('sell')
+        else:
+            # messages.success(request,("Whoops...... Form data is invalid...."))
+            messages.success(request,(str(form.errors)))
+            # return json.dumps({'status':'form error'})
+            return redirect('sell')
+            # return redirect('register')
+    else:     
+        return render(request,'sell.html',{'form':form})
+    

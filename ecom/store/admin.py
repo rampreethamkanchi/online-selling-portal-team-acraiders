@@ -6,5 +6,5 @@ admin.site.register(Customer)
 admin.site.register(Product)
 admin.site.register(Order)
 
-class Product_admin(admin.ModelAdmin):
-    prepopulated_fields={'slug':('p_name',)}
+# class Product_admin(admin.ModelAdmin):
+#     prepopulated_fields={'slug':('p_name',)}

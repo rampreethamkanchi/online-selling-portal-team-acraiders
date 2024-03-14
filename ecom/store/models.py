@@ -1,8 +1,7 @@
-
-
 # Create your models here.
 from django.db import models
-from django.utils.text import slugify
+# from django.utils.text import slugify
+from django.contrib.auth.models import User
 import datetime
 
 class Category(models.Model):
@@ -15,25 +14,32 @@ class Category(models.Model):
         verbose_name_plural = 'categories'
 
 class Customer(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    phone = models.CharField(max_length=50)
-    email = models.EmailField(max_length=50)
-    password = models.CharField(max_length=50)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    # first_name = models.CharField(max_length=50)
+    # last_name = models.CharField(max_length=50)
+    city = models.CharField(max_length=50,null=True, blank=True)
+    phone = models.CharField(max_length=50,null=True, blank=True)
+    # email = models.EmailField(max_length=50)
+    # password = models.CharField(max_length=50)
 
     def __str__(self):
-        return f'{self.first_name} {self.last_name}'
+        return str(self.user)
 
 class Product(models.Model):  # Renamed from Products to Product (singular)
     p_name = models.CharField(max_length=100)
+    seller = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)
     price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
     description = models.TextField()
-    image = models.ImageField(upload_to='products/')
+    image = models.ImageField(upload_to='products/',null=True, blank=True)
+    city = models.CharField(max_length=50,null=True, blank=True)
+    age = models.DurationField(default=datetime.timedelta(0),blank=True)
+    quantity = models.IntegerField(default=1,blank=True)
+    # age = models.TimeField(default=datetime.time(0, 0))
     # slug = models.SlugField(unique=True, max_length=100,)
 
     # Add sales stuff
-    is_sale = models.BooleanField(default=False)
+    is_sale = models.BooleanField(default=True)
     sale_price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
 
 
