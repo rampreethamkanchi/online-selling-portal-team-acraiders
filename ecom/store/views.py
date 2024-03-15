@@ -121,10 +121,22 @@ def sell(request):
         print('post requested....')
         form = ProductForm(request.POST,request.FILES)
         if form.is_valid():
-            form.seller = request.user
-            form.save()
-            messages.success(request,("product has been Registered ..."))
-            return redirect('sell')
+            print('form is valid....')
+            pending_seller=form.save(commit=False)
+            # print(pending_seller)
+            # pending_seller["seller"]= (request.user).customer
+            try:
+                # customer = Customer.objects.get(user=request.user)
+                # pending_seller.seller= customer
+                # print(pending_seller)
+                pending_seller.seller = request.user.customer
+                pending_seller.save()
+                messages.success(request,("product has been Registered ..."))
+                return redirect('sell')
+            except Customer.DoesNotExist:
+                messages.success(request,("Sorry...... User is not a customer, please try again from other account...."))
+                return redirect('sell')
+            
         else:
             # messages.success(request,("Whoops...... Form data is invalid...."))
             messages.success(request,(str(form.errors)))
