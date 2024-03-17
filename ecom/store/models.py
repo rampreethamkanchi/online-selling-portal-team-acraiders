@@ -28,7 +28,8 @@ class Customer(models.Model):
 class Product(models.Model):  # Renamed from Products to Product (singular)
     p_name = models.CharField(max_length=100)
     seller = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)
-    price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+    # price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+    price = models.PositiveBigIntegerField(default=0)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
     description = models.TextField()
     image = models.ImageField(upload_to='products/',null=True, blank=True)
@@ -40,18 +41,30 @@ class Product(models.Model):  # Renamed from Products to Product (singular)
 
     # Add sales stuff
     is_sale = models.BooleanField(default=True)
-    sale_price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
+    sale_price = models.PositiveBigIntegerField(default=0)
+    # sale_price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
 
 
     def __str__(self):
         return self.p_name
+class Address(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    city = models.CharField(max_length=50)
+    state = models.CharField(max_length=50)
+    pincode = models.CharField(max_length=50, null=True, blank=True)
+    street = models.CharField(max_length=50)
+    house_no = models.CharField(max_length=50, null=True, blank=True)
+
+    def __str__(self):
+        return self.city
 
 class Order(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)  # Renamed from Products to Product
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
-    address = models.CharField(max_length=100, default='', blank=True)
-    phone = models.CharField(max_length=50)
+    cost= models.PositiveBigIntegerField(default=0)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True, blank=True)
+    # phone = models.CharField(max_length=50, default='', blank=True)
     date = models.DateField(default=datetime.date.today)
     status = models.BooleanField(default=False)
 

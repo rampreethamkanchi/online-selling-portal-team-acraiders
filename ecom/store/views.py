@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .forms import SignUpForm, ProductForm
+from .forms import SignUpForm, ProductForm, AddressForm
 from django.db.models import Q
 import requests
 import json 
@@ -71,7 +71,7 @@ def login_user(request):
             messages.success(request,("you have beeen logged in ..."))
             return redirect('home')
         else:
-            messages.success(request,("you have beeen logged in ..."))
+            messages.success(request,("bad credentials, try again ..."))
             return redirect('login')
     return render(request,'login.html')
 
@@ -145,4 +145,43 @@ def sell(request):
             # return redirect('register')
     else:     
         return render(request,'sell.html',{'form':form})
+    
+# @login_required(login_url='login')
+def buy(request):
+    # form= AddressForm()
+    print("hi")
+    if request.method == "POST":
+        print('post requested....')
+        # form = AddressForm(request.POST)
+        # if form.is_valid():
+        #     print('form is valid....')
+        #     pending_address=form.save(commit=False)
+        #     try :
+        #         pending_address.customer = request.user.customer
+        #         pending_address.save()
+        #     except Customer.DoesNotExist:
+        #         messages.success(request,("Sorry...... User is not a customer, please try again from other account...."))
+        #         return redirect('buy')
+         # create order
+        try:
+            product_id = request.POST['product_id']
+            product = Product.objects.get(id=product_id)
+            product_price = product.sale_price
+            product_qty = request.POST['product_qty']
+            cost = product_price * int(product_qty)
+            customer = request.user.customer
+            address = customer.address_set.all()
+            pending_order = Order()
+            pending_order.product = Product.objects.get(id=product_id)
+            pending_order.customer = request.user.customer
+            pending_order.quantity = product_qty
+            pending_order.cost = cost
+            pending_order.address = address[0]
+            pending_order.save()   
+            return render(request,'buy-success.html')
+        except:
+            return render(request,'buy-failure.html')
+    else:
+        redirect('home')
+        # render(request, 'buy.html',{"form": form})
     

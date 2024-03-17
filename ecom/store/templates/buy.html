@@ -1,13 +1,10 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
-
 {% block content %}
-
 <header class="bg-dark py-5">
     <div class="container px-4 px-lg-5 my-5">
         <div class="text-center text-white">
-            <h1 class="display-4 fw-bolder">SELL YOUR PRODUCT</h1>
-            <p class="lead fw-normal text-white-50 mb-0">Product Info</p>
+            <h1 class="display-4 fw-bolder">ADD SHIPPING ADDRESS</h1>
+            <p class="lead fw-normal text-white-50 mb-0">Your address</p>
         </div>
     </div>
 </header>
@@ -17,11 +14,11 @@
         <div class="col-8 mx-auto">
             <center>
                 
-                <form method="post" action="{% url 'sell' %}" enctype="multipart/form-data" >
+                <form method="post" action="{% url 'buy/' %}">
                     {% csrf_token %}
                     {{form|crispy}}
                     <br><br>
-                    <button type="submit" class="btn btn-secondary">Register Product</button>
+                    <button type="submit" class="btn btn-secondary">Complete</button>
                 </form>
             </center>
             
