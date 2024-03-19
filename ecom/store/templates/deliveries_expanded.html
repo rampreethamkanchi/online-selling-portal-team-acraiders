@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<br><br>
+
+<div class=container>
+
+    <div class="card mb-3">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="{{ products.image.url }}" class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title text-center">{{ products.p_name }}</h5>
+                    <p class="card-title text-center">{{products.description}}</p> 
+                    <!-- {% if products.is_sale %} -->
+                    <!-- <div class="d-flex justify-content-center small text-warning mb-2"> -->
+                        <!-- <div class="bi-star-fill"></div> -->
+                        <!-- &nbsp;&nbsp;Sale!!&nbsp;&nbsp; -->
+                        <!-- <div class="bi-star-fill"></div> -->
+                        
+                    <!-- </div> -->
+    
+                    <!-- Product price-->
+                    <!-- <p class="text-center"><strike>₹{{products.price}}</strike>&nbsp;₹{{products.sale_price}}</p> -->
+                    
+                    <!-- {% else %} -->
+                    <!-- ₹{{products.price}} -->
+                    
+                    <!-- {% endif %} -->
+                    <br><br>
+                    <h3 style="text-align: center;">Delivery Details:</h3>
+                    <div class="container text-center">
+                        <div class="profile">
+                            <span style="font-size: 48px;">&#128100;</span>
+                            <p><b>Name of the User:</b>{{user.username}} </p>
+                            <p><b>Price bidded:</b>{{user.price}} </p>
+                            <p><b>Address:</b>{{user.city}}</p>
+                            <p><b>Email ID:</b>{{user.email}}</p>
+                            <p><b>Mobile No:</b>{{user.number}}</p>
+                            <p><b>Date of Ordering:</b></p>
+                        </div>
+                        <div style="text-align: center;">
+                            <button type="button" class="btn btn-primary"       style="margin-bottom: 2%;">Accept</button>
+                            <button type="button" class="btn btn-danger" style="margin-bottom: 2%;">Reject</button>
+                        </div>
+                    </div>
+                    <br/><br/>
+                    
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

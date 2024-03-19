@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container text-center">
+    <div class="profile">
+        <span style="font-size: 48px;">&#128100;</span>
+        <p><b>Username:</b>{{user.username}} </p>
+        <p><b>Email ID:</b>{{user.email}}</p>
+        <p><b>Password:</b>{{user.password2}}</p>
+        <p><b>City:</b>{{user.city}}</p>
+        <p><b>Mobile No:</b>{{user.number}}</p>
+    </div>
+    <button type="button" class="btn btn-primary" style="margin-bottom: 2%;">Edit Profile</button>
+</div>
+
+
+{% endblock %}

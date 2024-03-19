@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
-<header class="bg-dark py-5">
+<header class="py-5" style="background-image: url('../../media/products/ecommerce-2140604_1280.jpg'); background-position: center center; background-repeat: no-repeat;background-size:cover;background-color: rgba(0, 0, 0, 0.65); background-blend-mode: multiply; max-height: 300px;">
     <div class="container px-4 px-lg-5 my-5">
         <div class="text-center text-white">
-            <h1 class="display-4 fw-bolder">Shop in style</h1>
-            <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
+            <h1 class="display-4 fw-bolder" style="color:wheat;">TEAM ACRAIDERS E-COMMERCE WEBSITE</h1>
         </div>
     </div>
 </header>
+
 <!-- Section-->
 <section class="py-5">
     <div class="container px-4 px-lg-5 mt-5">
@@ -19,12 +19,12 @@
                      <!-- Sale badge-->
                 <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
                     <!-- Product image-->
-                    <img class="card-img-top" src="{{product.image.url}}" alt="..." />
+                    <img class="card-img-top" src="{{product.image.url}}" alt="..." style="height: 300px;" />
                     <!-- Product details-->
                     <div class="card-body p-4">
                         <div class="text-center">
                             <!-- Product name-->
-                            <h5 class="fw-bolder">{{product.p_name}}</h5>
+                            <h5 class="fw-bolder"style="max-height:70px;  overflow: hidden;  text-overflow: ellipsis; white-space: nowrap;"><a href="{% url 'product' product.id %}" style="text-decoration: none; color: black;">{{product.p_name}}</a></h5>
                             <div class="d-flex justify-content-center small text-warning mb-2">
                                 <div class="bi-star-fill"></div>
                                 &nbsp;&nbsp;Sale!!&nbsp;&nbsp;

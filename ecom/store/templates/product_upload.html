@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<br><br>
+
+<div class=container>
+    <div class="card mb-3">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="{{ products.image.url }}" class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <div class="container text-center">
+                        <div class="profile">
+                            <span style="font-size: 30px; " ><b>Product Details:</b></span>
+                            <p><b>Product Name:</b>{{products.p_name}} </p>
+                            <p><b>Product Description:</b>{{products.description}}</p>
+                            <p><b>Sale Price:</b>{{products.price}}$</p>
+                            <p><b>Uploaded Quantity:</b>{{products.quantity}}</p>
+                            <p><b>Category:</b>{{products.category}}</p>
+                            <p><b>City:</b>{{products.city}}</p>
+                            <p><b>Age:</b>{{products.age}}</p>
+                        </div>
+                        <button type="button" class="btn btn-primary" style="margin-bottom: 2%;">Update Details</button>
+                    </div>
+                <br/><br/>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

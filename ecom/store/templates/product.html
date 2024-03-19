@@ -42,8 +42,6 @@
             </div>
           </div>
           <br /><br />
-          {% if user.is_authenticated %}
-          <br /><br />
 
           <div class="row justify-content-center" id="address">
             <div class="col-md-2">Shipping Address:</div>
@@ -55,14 +53,6 @@
               </select>
             </div>
           </div>
-          {%else%}
-          <div class="text-center">
-            <a href="{% url 'login' %}" class="btn btn-secondary"
-              >Login to buy</a
-            >
-          </div>
-          <br /><br />
-          {% endif %}
           <div class="text-center">
             <button
               type="submit"
@@ -72,7 +62,6 @@
             >
               Add to cart
             </button>
-            {% if user.is_authenticated %}
             <button
               type="submit"
               class="btn btn-secondary"
@@ -81,7 +70,6 @@
             >
               Buy
             </button>
-            {% endif %}
           </div>
         </div>
       </div>
@@ -97,7 +85,7 @@
           product_id: $("#buy").val(),
           product_qty: $("#buy option:selected").text(),
           address: $("#address option:selected").text(),
-          
+
           csrfmiddlewaretoken: "{{ csrf_token }}",
           action: "post",
         },

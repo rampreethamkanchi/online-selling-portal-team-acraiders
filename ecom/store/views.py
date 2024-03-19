@@ -25,7 +25,26 @@ def product(request,pk):
 def home(request):
     products = Product.objects.all()
     return render(request,'home.html',{'products': products})
-
+def profile(request):
+    return render(request,'profile.html')
+    # return redirect('profile')
+def orders(request):
+    products = Product.objects.all()
+    return render(request,'orders.html',{'products': products})
+    # return redirect('profile')
+def products(request):
+    products = Product.objects.all()
+    return render(request,'products.html',{'products': products})
+def deliveries(request):
+    products = Product.objects.all()
+    return render(request,'deliveries.html',{'products': products})
+    deliveries_expanded
+def deliveries_expanded(request,pk):
+    products = Product.objects.get(id=pk)
+    return render(request,'deliveries_expanded.html',{'products': products})
+def product_upload(request,pk):
+    products = Product.objects.get(id=pk)
+    return render(request,'product_upload.html',{'products': products})
 def about(request):
     # Product.objects.all().delete()
     # Category.objects.all().delete()
@@ -146,7 +165,7 @@ def sell(request):
     else:     
         return render(request,'sell.html',{'form':form})
     
-# @login_required(login_url='login')
+@login_required(login_url='login')
 def buy(request):
     # form= AddressForm()
     print("hi")
@@ -177,7 +196,7 @@ def buy(request):
             pending_order.quantity = product_qty
             pending_order.cost = cost
             pending_order.address = address[0]
-            pending_order.save()   
+            pending_order.save()  
             return render(request,'buy-success.html')
         except:
             return render(request,'buy-failure.html')
