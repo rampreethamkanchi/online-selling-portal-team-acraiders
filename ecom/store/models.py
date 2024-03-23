@@ -63,10 +63,10 @@ class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
     cost= models.PositiveBigIntegerField(default=0)
-    address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True, blank=True)
+    # address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True, blank=True)
     # phone = models.CharField(max_length=50, default='', blank=True)
-    date = models.DateField(default=datetime.date.today)
-    status = models.BooleanField(default=False)
+    date = models.DateField(default=datetime.date.today, blank=True)
+    status = models.BooleanField(default=False,blank=True)
 
     def __str__(self):
         return str(self.product)

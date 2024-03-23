@@ -21,7 +21,7 @@
           <div class="d-flex justify-content-center small text-warning mb-2">
             <div class="bi-star-fill"></div>
             &nbsp;&nbsp;Sale!!&nbsp;&nbsp;
-            <!-- <div class="bi-star-fill"></div> -->
+            <div class="bi-star-fill"></div>
           </div>
 
           <!-- Product price-->
@@ -34,7 +34,7 @@
           <div class="row justify-content-center" id="qty-cart">
             <div class="col-md-2">Quantity:</div>
             <div class="col-md-2">
-              <select class="form-select" id="Quantity_option">
+              <select class="form-select">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -42,19 +42,18 @@
             </div>
           </div>
           <br /><br />
-          <p style="text-align: center;"><b>Price to Bid:</b>&nbsp; &nbsp;<input type="number" id="bidAmount"></p>
-          <br /><br />
+
           <div class="row justify-content-center" id="address">
-            <!-- <div class="col-md-2">Shipping Address:</div>
+            <div class="col-md-2">Shipping Address:</div>
             <div class="col-md-2">
-              <select class="form-select" id="Address_option">
+              <select class="form-select">
                 <option value="1">Home</option>
                 <option value="2">Office</option>
                 <option value="3">Other</option>
               </select>
-            </div> -->
+            </div>
           </div>
-          <!-- <div class="text-center">
+          <div class="text-center">
             <button
               type="submit"
               class="btn btn-secondary"
@@ -71,16 +70,12 @@
             >
               Buy
             </button>
-          </div> -->
-          <div style="text-align: center;">
-            <button type="button" class="btn btn-primary" style="margin-top: 4%;">Add to Cart</button>
-            <button type="button" class="btn btn-primary" style="margin-top: 4%;" id="sendRequests" onclick="sendRequests()">Request to Buy</button>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <!-- <script>
+  <script>
     $(document).on("click", "#buy", function (e) {
       e.preventDefault();
       $.ajax({
@@ -125,49 +120,6 @@
         },
       });
     });
-  </script> -->
-
-  <script>
-    var productId = '{{ products.id }}';
-    // Function to send both POST and GET requests
-    function sendRequests() {
-      // Get the selected values
-      
-      var quantityValue = document.getElementById("Quantity_option").value;
-      // var addressValue = document.getElementById("Address_option").value;
-      var bidAmount = document.getElementById("bidAmount").value;
-      // if(addressValue==1){
-      //   addressopt="Home";
-      // }
-      // else if(addressValue==2){
-      //   addressopt="Office";
-      // }
-      // else{
-      //   addressopt="Other";
-      // }
-      
-      // Object to be sent with the POST request
-      var postData = {
-        bid_amount:bidAmount,
-        product_id: productId,
-        product_qty: quantityValue,
-        csrfmiddlewaretoken: '{{ csrf_token }}'
-        // Add more key-value pairs as needed
-      };
-      console.log(postData)
-  
-      // Send POST request with the postData object
-      $.post('{%url "buy" %}', postData, function(data, status) {
-        console.log("POST request status: " + status);
-        // Handle response if needed
-      });
-  
-      // Send GET request
-      // $.get("#", function(data, status) {
-      //   console.log("GET request status: " + status);
-      //   // Handle response if needed
-      // });
-    }
   </script>
   {% endblock %}
 </div>

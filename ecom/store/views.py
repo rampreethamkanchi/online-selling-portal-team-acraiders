@@ -11,6 +11,7 @@ from django.db.models import Q
 import requests
 import json 
 # Create your views here.
+@login_required(login_url='login')
 def category(request,foo):
     try:
         category=Category.objects.get(name=foo)
@@ -19,32 +20,48 @@ def category(request,foo):
     except:
         messages.success(request,("category doesn't exist........"))
         return redirect('home')
+@login_required(login_url='login')
 def product(request,pk):
     products = Product.objects.get(id=pk)
     return render(request,'product.html',{'products': products})
+@login_required(login_url='login')
 def home(request):
     products = Product.objects.all()
-    return render(request,'home.html',{'products': products})
+    categories = Category.objects.all()
+    return render(request,'home.html',{'products': products, 'categories': categories})
+@login_required(login_url='login')
 def profile(request):
-    return render(request,'profile.html')
+    user = request.user
+    return render(request,'profile.html',{'user': user})
     # return redirect('profile')
+@login_required(login_url='login')
 def orders(request):
-    products = Product.objects.all()
-    return render(request,'orders.html',{'products': products})
+    # products = Product.objects.all()
+    # orders = Order.objects.filter(customer=request.user.customer)
+    orders = request.user.customer.order_set.all()
+    return render(request,'orders.html',{'orders': orders})
     # return redirect('profile')
+@login_required(login_url='login')
 def products(request):
-    products = Product.objects.all()
+    products= request.user.customer.product_set.all()
+    # products = Product.objects.all()
     return render(request,'products.html',{'products': products})
+@login_required(login_url='login')
 def deliveries(request):
-    products = Product.objects.all()
-    return render(request,'deliveries.html',{'products': products})
-    deliveries_expanded
+    deliveries = Order.objects.filter(product__in= request.user.customer.product_set.all())
+    # products = Product.objects.all()
+    return render(request,'deliveries.html',{'deliveries': deliveries})
+    # deliveries_expanded
+@login_required(login_url='login')
 def deliveries_expanded(request,pk):
-    products = Product.objects.get(id=pk)
-    return render(request,'deliveries_expanded.html',{'products': products})
+    delivery = Order.objects.get(id=pk)
+    return render(request,'deliveries_expanded.html',{'delivery': delivery})
+@login_required(login_url='login')
 def product_upload(request,pk):
-    products = Product.objects.get(id=pk)
-    return render(request,'product_upload.html',{'products': products})
+    product = Product.objects.get(id=pk)
+    # products = request.user.customer.product_set.all()
+    return render(request,'product_upload.html',{'product': product})
+@login_required(login_url='login')
 def about(request):
     # Product.objects.all().delete()
     # Category.objects.all().delete()
@@ -93,7 +110,7 @@ def login_user(request):
             messages.success(request,("bad credentials, try again ..."))
             return redirect('login')
     return render(request,'login.html')
-
+@login_required(login_url='login')
 def logout_user(request):
     logout(request)
     messages.success(request,("you have beeen logged out ..."))
@@ -128,6 +145,7 @@ def register_user(request):
             return redirect('register')
     else:     
         return render(request,'register.html',{'form':form})
+@login_required(login_url='login')
 def search(request):
     if request.method == "POST":
         search = request.POST['search']
@@ -167,40 +185,31 @@ def sell(request):
     
 @login_required(login_url='login')
 def buy(request):
-    # form= AddressForm()
     print("hi")
     if request.method == "POST":
         print('post requested....')
-        # form = AddressForm(request.POST)
-        # if form.is_valid():
-        #     print('form is valid....')
-        #     pending_address=form.save(commit=False)
-        #     try :
-        #         pending_address.customer = request.user.customer
-        #         pending_address.save()
-        #     except Customer.DoesNotExist:
-        #         messages.success(request,("Sorry...... User is not a customer, please try again from other account...."))
-        #         return redirect('buy')
-         # create order
         try:
             product_id = request.POST['product_id']
+            print(product_id)
             product = Product.objects.get(id=product_id)
             product_price = product.sale_price
+            print(product_price)
             product_qty = request.POST['product_qty']
+            print(product_qty)
             cost = product_price * int(product_qty)
+            print(cost)
             customer = request.user.customer
-            address = customer.address_set.all()
             pending_order = Order()
             pending_order.product = Product.objects.get(id=product_id)
             pending_order.customer = request.user.customer
             pending_order.quantity = product_qty
             pending_order.cost = cost
-            pending_order.address = address[0]
-            pending_order.save()  
+            print(pending_order)
+            print('order created')
+            pending_order.save()
             return render(request,'buy-success.html')
         except:
+            print('error')
             return render(request,'buy-failure.html')
     else:
-        redirect('home')
-        # render(request, 'buy.html',{"form": form})
-    
+        redirect('home')    

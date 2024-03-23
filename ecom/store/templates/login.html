@@ -4,9 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login Page</title>
-  <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <!-- Custom CSS -->
+    
   <style>
     body {
       background-color: #f8f9fa;
@@ -31,9 +30,25 @@
       margin-top: 15px;
     }
   </style>
+  
 </head>
 <body>
-    {% include 'navbar.html' %}
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+    <header class="py-5" style="background-image: url('../../media/products/ecommerce-2140604_1280.jpg'); background-position: center center; background-repeat: no-repeat;background-size:cover;background-color: rgba(0, 0, 0, 0.65); background-blend-mode: multiply; max-height: 300px;">
+      <div class="container px-4 px-lg-5 my-5">
+          <div class="text-center text-white">
+              <h1 class="display-4 fw-bolder" style="color:wheat;">TEAM</h1>
+          </div>
+      </div>
+  </header>
+
   <div class="container">
     <div class="login-container">
       <h2>Login</h2>
@@ -57,10 +72,9 @@
       </div>
     </div>
   </div>
-
-  <!-- Bootstrap JS (optional) -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+
