@@ -1,1 +1,6 @@
+<<<<<<< HEAD
 myenv
+=======
+.venv
+.env
+>>>>>>> ea46c79fee3f65ef117cc3f9355a87cf7d4a1b12

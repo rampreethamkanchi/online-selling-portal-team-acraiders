@@ -8,6 +8,7 @@ django-rest-framework==0.1.0
 djangorestframework==3.14.0
 idna==3.6
 pillow==10.2.0
+python-dotenv==1.0.1
 pytz==2024.1
 requests==2.31.0
 sqlparse==0.4.4
