@@ -34,8 +34,10 @@ def home(request):
     return render(request,'home.html',{'products': products, 'categories': categories})
 @login_required(login_url='login')
 def profile(request):
-    user = request.user
-    return render(request,'profile.html',{'user': user})
+    customer = request.user.customer
+    addresses = customer.address_set.all()
+    address = addresses[0]
+    return render(request,'profile.html',{'customer': customer, 'address': address})
     # return redirect('profile')
 @login_required(login_url='login')
 def orders(request):
@@ -201,7 +203,12 @@ def sell(request):
             # return redirect('register')
     else:     
         return render(request,'sell.html',{'form':form})
-    
+@login_required(login_url='login')
+def buySuccess(request):
+    return render(request,'buySuccess.html')
+@login_required(login_url='login')
+def buyFailure(request):
+    return render(request,'buyFailure.html')  
 @login_required(login_url='login')
 def buy(request):
     print("hi")
@@ -226,9 +233,9 @@ def buy(request):
             print(pending_order)
             print('order created')
             pending_order.save()
-            return render(request,'buy-success.html')
+            return redirect('buySuccess')
         except:
             print('error')
-            return render(request,'buy-failure.html')
+            return redirect('buyFailure')
     else:
-        redirect('home')    
+        return redirect('home')    

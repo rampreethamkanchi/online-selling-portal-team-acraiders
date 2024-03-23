@@ -18,4 +18,6 @@ urlpatterns = [
     path('deliveries/',views.deliveries,name='deliveries'),
     path('deliveries_expanded/<int:pk>',views.deliveries_expanded,name='deliveries_expanded'),
     path('products/',views.products,name='products'),
+    path('buySuccess/',views.buySuccess,name='buySuccess'),
+    path('buyFailure/',views.buyFailure,name='buyFailure'),
 ]
