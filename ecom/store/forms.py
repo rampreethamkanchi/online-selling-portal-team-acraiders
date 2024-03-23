@@ -9,12 +9,12 @@ class SignUpForm(UserCreationForm):
 	# email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email Address'}))
 	# first_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First Name'}))
 	# last_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Last Name'}))
-	city = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'City'}))
+	# city = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'City'}))
 	phone = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Phone'}))
 
 	class Meta:
 		model = User
-		fields = ('username', 'password1', 'password2','email','city','phone')
+		fields = ('username', 'password1', 'password2','email','phone')
 		# fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
 
 	def __init__(self, *args, **kwargs):

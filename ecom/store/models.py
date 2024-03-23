@@ -17,7 +17,7 @@ class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     # first_name = models.CharField(max_length=50)
     # last_name = models.CharField(max_length=50)
-    city = models.CharField(max_length=50,null=True, blank=True)
+    # city = models.CharField(max_length=50,null=True, blank=True)
     phone = models.CharField(max_length=50,null=True, blank=True)
     # email = models.EmailField(max_length=50)
     # password = models.CharField(max_length=50)
@@ -49,7 +49,7 @@ class Product(models.Model):  # Renamed from Products to Product (singular)
         return self.p_name
 class Address(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    city = models.CharField(max_length=50)
+    city = models.CharField(max_length=50,)
     state = models.CharField(max_length=50)
     pincode = models.CharField(max_length=50, null=True, blank=True)
     street = models.CharField(max_length=50)

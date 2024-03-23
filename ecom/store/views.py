@@ -116,34 +116,44 @@ def logout_user(request):
     return redirect('home')
 def register_user(request):
     form = SignUpForm()
+    form1 = AddressForm()
     if request.method == "POST":
         print('post requested....')
         form = SignUpForm(request.POST)
-        if form.is_valid():
-            form.save()
+        form1 = AddressForm(request.POST)
+        if form.is_valid() and form1.is_valid():
+            # form.save()
+            print('form is valid....')
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
             email = form.cleaned_data['email']
             user=authenticate(username=username,password=password,email=email)
-            if user is not None:               
+            print(user)
+            if user is None:      
+                print('creating user....')     
+                user = form.save()    
                 customer=Customer.objects.create(
                 user=user,
-                city=form.cleaned_data['city'],
+                # city=form.cleaned_data['city'],
                 phone=form.cleaned_data['phone']
                 )
+                address = form1.save(commit=False)
                 customer.save()
+                address.customer = customer
+                print('creating address....')
+                address.save()
                 login(request,user)
                 messages.success(request,("you have Registered ..."))
                 return redirect('home')
             else:
-                messages.success(request,("Sorry...... There was problem in registering, please try again...."))
+                messages.success(request,("Sorry...... entered credentials are already in use. Try logging in....or enter new credentials...."))
                 return redirect('register')
         else:
             # messages.success(request,("Whoops...... Form data is invalid...."))
             messages.success(request,(str(form.errors)))
             return redirect('register')
     else:     
-        return render(request,'register.html',{'form':form})
+        return render(request,'register.html',{'form':form, 'form1':form1})
 @login_required(login_url='login')
 def search(request):
     if request.method == "POST":
