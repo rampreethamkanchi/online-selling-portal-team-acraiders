@@ -48,8 +48,7 @@ def products(request):
     return render(request,'products.html',{'products': products})
 @login_required(login_url='login')
 def deliveries(request):
-    deliveries = Order.objects.filter(product__in= request.user.customer.product_set.all())
-    # products = Product.objects.all()
+    deliveries = Order.objects.filter(product__seller=request.user.customer)
     return render(request,'deliveries.html',{'deliveries': deliveries})
     # deliveries_expanded
 @login_required(login_url='login')
