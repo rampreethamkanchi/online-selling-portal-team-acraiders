@@ -10,6 +10,9 @@ from .forms import SignUpForm, ProductForm, AddressForm
 from django.db.models import Q
 import requests
 import json 
+from django.core.mail import send_mail
+from django.core.mail import EmailMessage
+from django.conf import settings
 # Create your views here.
 @login_required(login_url='login')
 def category(request,foo):
@@ -128,7 +131,7 @@ def register_user(request):
             password = form.cleaned_data['password1']
             email = form.cleaned_data['email']
             user=authenticate(username=username,password=password,email=email)
-            print(user)
+            # print(user)
             if user is None:      
                 print('creating user....')     
                 user = form.save()    
@@ -143,6 +146,13 @@ def register_user(request):
                 print('creating address....')
                 address.save()
                 login(request,user)
+                emailObject = EmailMessage(
+                    'Thanks for registering into Acraiders',
+                    'We are happy to have you onboard',
+                    settings.EMAIL_HOST_USER,
+                    [email],
+                )
+                emailObject.send(fail_silently=False)
                 messages.success(request,("you have Registered ..."))
                 return redirect('home')
             else:
