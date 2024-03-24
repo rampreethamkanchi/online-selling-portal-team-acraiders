@@ -8,6 +8,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from .forms import SignUpForm, ProductForm, AddressForm
 from django.db.models import Q
+#import HttpResponse
+from django.http import HttpResponse
 import requests
 import json 
 # from django.core.mail import send_mail
@@ -227,6 +229,7 @@ def buy(request):
     if request.method == "POST":
         print('post requested....')
         try:
+            # return render(request,'buySuccess.html')
             product_id = request.POST['product_id']
             print(product_id)
             product = Product.objects.get(id=product_id)
@@ -234,6 +237,13 @@ def buy(request):
             print(product_price)
             product_qty = request.POST['product_qty']
             print(product_qty)
+            #compare integer values of product_qty and product_price
+            #cast string to its integer value
+            product_qty = int(product_qty)
+            product_price = int(product_price)
+            if product_qty>product.quantity :
+                messages.success(request,("Sorry, that much quantity is not available."))
+                return HttpResponse(status=400)
             cost = product_price * int(product_qty)
             print(cost)
             customer = request.user.customer
@@ -242,12 +252,17 @@ def buy(request):
             pending_order.customer = request.user.customer
             pending_order.quantity = product_qty
             pending_order.cost = cost
-            print(pending_order)
+            # print(pending_order)
             print('order created')
             pending_order.save()
-            return redirect('orders')
-        except:
-            print('error')
-            return redirect('orders')
+            messages.success(request,("buy successful..."))
+            # we have to return status code 200 to ajax call
+            # return json.dumps({'status':'success'})
+            return HttpResponse(status=200)
+            print("hi")
+        except Exception as e:
+            print(e)
+            messages.success(request,("buy failure..."))
+            return HttpResponse(status=400)
     else:
         return redirect('home')    

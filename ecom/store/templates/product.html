@@ -1,8 +1,7 @@
-{% extends 'base.html' %} {% block content %}
-
+{% extends 'base.html' %} 
+{% block content %}
 <br /><br />
-
-<div class="container" style="flex: 1;">
+<div class="container" style="flex: 1">
   <div class="card mb-3">
     <div class="row g-0">
       <div class="col-md-4">
@@ -42,12 +41,16 @@
             </div> -->
             <div class="col-md-2"><b>Quantity:</b></div>
             <div class="col-md-2">
-              <select class="form-select" id="Quantity_option">
-              </select>
-          </div>
+              <select class="form-select" id="Quantity_option"></select>
+            </div>
           </div>
           <br /><br />
-          <p style="text-align: center;"><b>Price to Bid:</b>&nbsp; &nbsp;<input type="number" id="bidAmount"></p>
+          <p style="text-align: center">
+            <b>Price to Bid:</b>&nbsp; &nbsp;<input
+              type="number"
+              id="bidAmount"
+            />
+          </p>
           <br /><br />
           <div class="row justify-content-center" id="address">
             <!-- <div class="col-md-2">Shipping Address:</div>
@@ -77,9 +80,23 @@
               Buy
             </button>
           </div> -->
-          <div style="text-align: center;">
-            <button type="button" class="btn btn-primary" style="margin-top: 4%;">Add to Cart</button>
-            <button type="button" class="btn btn-primary" style="margin-top: 4%;" id="sendRequests" onclick="sendRequests()">Request to Buy</button>
+          <div style="text-align: center">
+            <button
+              type="button"
+              class="btn btn-primary"
+              style="margin-top: 4%"
+            >
+              Add to Cart
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              style="margin-top: 4%"
+              id="sendRequests"
+              onclick="sendRequests()"
+            >
+              Request to Buy
+            </button>
           </div>
         </div>
       </div>
@@ -133,28 +150,27 @@
   </script> -->
 
   <script>
-     var n = '{{ products.quantity }}';
+    var n = "{{ products.quantity }}";
 
-// Get a reference to the select element
-var selectElement = document.getElementById('Quantity_option');
+    // Get a reference to the select element
+    var selectElement = document.getElementById("Quantity_option");
 
-// Loop from 1 to n to generate dropdown options
-for (var i = 1; i <= n; i++) {
-    // Create an option element
-    var optionElement = document.createElement('option');
+    // Loop from 1 to n to generate dropdown options
+    for (var i = 1; i <= n; i++) {
+      // Create an option element
+      var optionElement = document.createElement("option");
 
-    // Set the value and text of the option
-    optionElement.value = i;
-    optionElement.textContent = i;
+      // Set the value and text of the option
+      optionElement.value = i;
+      optionElement.textContent = i;
 
-    // Append the option to the select element
-    selectElement.appendChild(optionElement);
-}
-    var productId = '{{ products.id }}';
+      // Append the option to the select element
+      selectElement.appendChild(optionElement);
+    }
+    var productId = "{{ products.id }}";
     // Function to send both POST and GET requests
     function sendRequests() {
       // Get the selected values
-      
       var quantityValue = document.getElementById("Quantity_option").value;
       // var addressValue = document.getElementById("Address_option").value;
       var bidAmount = document.getElementById("bidAmount").value;
@@ -167,23 +183,28 @@ for (var i = 1; i <= n; i++) {
       // else{
       //   addressopt="Other";
       // }
-      
+
       // Object to be sent with the POST request
       var postData = {
-        bid_amount:bidAmount,
+        bid_amount: bidAmount,
         product_id: productId,
         product_qty: quantityValue,
-        csrfmiddlewaretoken: '{{ csrf_token }}'
+        csrfmiddlewaretoken: "{{ csrf_token }}",
         // Add more key-value pairs as needed
       };
-      console.log(postData)
-  
+      console.log(postData);
+
       // Send POST request with the postData object
-      $.post('{%url "buy" %}', postData, function(data, status) {
+      $.post('{%url "buy" %}', postData, function (data, status) {
         console.log("POST request status: " + status);
-        // Handle response if needed
+        if(status=='success'){  
+          //redirect to the buySuccess page
+          window.location.href = "{% url 'buySuccess' %}";
+        }
+        else{
+          window.location.href = "{% url 'buyFailure' %}";
+        }
       });
-  
       // Send GET request
       // $.get("#", function(data, status) {
       //   console.log("GET request status: " + status);
