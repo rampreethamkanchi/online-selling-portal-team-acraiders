@@ -2,26 +2,26 @@
 
 {% block content %}
 
-<br><br>
+<br /><br />
 
-<div class=container>
+<div class=container style="flex: 1;">
     <div class="card mb-3">
         <div class="row g-0">
-            <div class="col-md-4">
-                <img src="{{ products.image.url }}" class="img-fluid rounded-start" alt="...">
+            <div class="col-md-4" >
+                <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="..." width="100%" height="100%">
             </div>
             <div class="col-md-8">
                 <div class="card-body">
                     <div class="container text-center">
                         <div class="profile">
-                            <span style="font-size: 30px; " ><b>Product Details:</b></span>
-                            <p><b>Product Name:</b>{{products.p_name}} </p>
-                            <p><b>Product Description:</b>{{products.description}}</p>
-                            <p><b>Sale Price:</b>{{products.price}}$</p>
-                            <p><b>Uploaded Quantity:</b>{{products.quantity}}</p>
-                            <p><b>Category:</b>{{products.category}}</p>
-                            <p><b>City:</b>{{products.city}}</p>
-                            <p><b>Age:</b>{{products.age}}</p>
+                            <span style="font-size: 30px; margin-bottom: 20px;" ><b>Product Details:</b></span>
+                            <p><b>Product Name&nbsp;:</b>&nbsp;{{product.p_name}} </p>
+                            <p><b>Product Description&nbsp;:</b>&nbsp;{{product.description}}</p>
+                            <p><b>Sale Price&nbsp;:</b>&nbsp;{{product.price}}₹</p>
+                            <p><b>Uploaded Quantity&nbsp;:</b>&nbsp;{{product.quantity}}</p>
+                            <p><b>Category&nbsp;:</b>&nbsp;{{product.category}}</p>
+                            <p><b>City&nbsp;:</b>&nbsp;{{product.city}}</p>
+                            <p><b>Age&nbsp;:</b>&nbsp;{{product.age}}</p>
                         </div>
                         <button type="button" class="btn btn-primary" style="margin-bottom: 2%;">Update Details</button>
                     </div>
