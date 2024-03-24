@@ -10,9 +10,9 @@ from .forms import SignUpForm, ProductForm, AddressForm
 from django.db.models import Q
 import requests
 import json 
-from django.core.mail import send_mail
-from django.core.mail import EmailMessage
-from django.conf import settings
+# from django.core.mail import send_mail
+# from django.core.mail import EmailMessage
+# from django.conf import settings
 # Create your views here.
 @login_required(login_url='login')
 def category(request,foo):
@@ -47,6 +47,15 @@ def orders(request):
     return render(request,'orders.html',{'orders': orders})
     # return redirect('profile')
 @login_required(login_url='login')
+def order_expanded(request,pk):
+    # deliveries = Order.objects.filter(product__seller=request.user.customer)
+    # seller_details=deliveries.get(id=pk)
+    customer = request.user.customer
+    addresses = customer.address_set.all()
+    address = addresses[0]
+    ordered = Order.objects.get(id=pk)
+    return render(request,'order_expanded.html',{'ordered': ordered , 'customer': customer, 'address': address })
+@login_required(login_url='login')
 def products(request):
     products= request.user.customer.product_set.all()
     # products = Product.objects.all()
@@ -58,8 +67,11 @@ def deliveries(request):
     # deliveries_expanded
 @login_required(login_url='login')
 def deliveries_expanded(request,pk):
+    # customer = request.delivery.customer
     delivery = Order.objects.get(id=pk)
-    return render(request,'deliveries_expanded.html',{'delivery': delivery})
+    addresses = delivery.customer.address_set.all()
+    address = addresses[0]
+    return render(request,'deliveries_expanded.html',{'delivery': delivery , 'address': address })
 @login_required(login_url='login')
 def product_upload(request,pk):
     product = Product.objects.get(id=pk)
@@ -148,13 +160,13 @@ def register_user(request):
                 print('creating address....')
                 address.save()
                 login(request,user)
-                emailObject = EmailMessage(
-                    'Thanks for registering into Acraiders',
-                    'We are happy to have you onboard',
-                    settings.EMAIL_HOST_USER,
-                    [email],
-                )
-                emailObject.send(fail_silently=False)
+                # emailObject = EmailMessage(
+                #     'Thanks for registering into Acraiders',
+                #     'We are happy to have you onboard',
+                #     settings.EMAIL_HOST_USER,
+                #     [email],
+                # )
+                # emailObject.send(fail_silently=True)
                 messages.success(request,("you have Registered ..."))
                 return redirect('home')
             else:
@@ -233,9 +245,9 @@ def buy(request):
             print(pending_order)
             print('order created')
             pending_order.save()
-            return redirect('buySuccess')
+            return redirect('orders')
         except:
             print('error')
-            return redirect('buyFailure')
+            return redirect('orders')
     else:
         return redirect('home')    

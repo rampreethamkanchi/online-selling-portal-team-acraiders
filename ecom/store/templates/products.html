@@ -4,7 +4,7 @@
 <h1 style="text-align: center; margin-top: 10px;">
     Your Products
 </h1>
-<section class="py-5">
+<section class="py-5" style="flex: 1;">
     <div class="container px-4 px-lg-5 mt-5">
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
             {% for product in products %}
@@ -26,8 +26,8 @@
                     </div>
                     <!-- Product actions-->
                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div style="margin-bottom: 10px;"><b>Uploaded Quantity: </b> 01</div>
-                        <div style="margin-bottom: 10px;"><b>Date of Uploading: </b>00-00-0000</div>
+                        <div style="margin-bottom: 10px;"><b>Uploaded Quantity: </b> {{product.quantity}}</div>
+                        <div style="margin-bottom: 10px;"><b>Date of Uploading: </b>{{product.date}}</div>
                         <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'product_upload' product.id %}">Uploaded Details</a></div>
                     </div>
                 </div>

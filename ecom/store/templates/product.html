@@ -2,7 +2,7 @@
 
 <br /><br />
 
-<div class="container">
+<div class="container" style="flex: 1;">
   <div class="card mb-3">
     <div class="row g-0">
       <div class="col-md-4">
@@ -32,14 +32,19 @@
           {% else %} ₹{{products.price}} {% endif %}
           <br /><br />
           <div class="row justify-content-center" id="qty-cart">
-            <div class="col-md-2">Quantity:</div>
+            <!-- <div class="col-md-2">Quantity:</div>
             <div class="col-md-2">
               <select class="form-select" id="Quantity_option">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
               </select>
-            </div>
+            </div> -->
+            <div class="col-md-2"><b>Quantity:</b></div>
+            <div class="col-md-2">
+              <select class="form-select" id="Quantity_option">
+              </select>
+          </div>
           </div>
           <br /><br />
           <p style="text-align: center;"><b>Price to Bid:</b>&nbsp; &nbsp;<input type="number" id="bidAmount"></p>
@@ -128,6 +133,23 @@
   </script> -->
 
   <script>
+     var n = '{{ products.quantity }}';
+
+// Get a reference to the select element
+var selectElement = document.getElementById('Quantity_option');
+
+// Loop from 1 to n to generate dropdown options
+for (var i = 1; i <= n; i++) {
+    // Create an option element
+    var optionElement = document.createElement('option');
+
+    // Set the value and text of the option
+    optionElement.value = i;
+    optionElement.textContent = i;
+
+    // Append the option to the select element
+    selectElement.appendChild(optionElement);
+}
     var productId = '{{ products.id }}';
     // Function to send both POST and GET requests
     function sendRequests() {
@@ -169,5 +191,5 @@
       // });
     }
   </script>
-  {% endblock %}
 </div>
+{% endblock %}
