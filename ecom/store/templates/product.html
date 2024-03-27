@@ -1,7 +1,7 @@
 {% extends 'base.html' %} 
 {% block content %}
 <br /><br />
-<div class="container" style="flex: 1">
+<form class="container" style="flex: 1">
   <div class="card mb-3">
     <div class="row g-0">
       <div class="col-md-4">
@@ -9,6 +9,7 @@
           src="{{ products.image.url }}"
           class="img-fluid rounded-start"
           alt="..."
+          style="width: 100%;"
         />
       </div>
       <div class="col-md-8">
@@ -41,45 +42,28 @@
             </div> -->
             <div class="col-md-2"><b>Quantity:</b></div>
             <div class="col-md-2">
-              <select class="form-select" id="Quantity_option"></select>
+              <input type="number" id="quantity" name="quantity" min="1" max="{{products.quantity}}" value="1">
             </div>
           </div>
-          <br /><br />
+          <br>
           <p style="text-align: center">
             <b>Price to Bid:</b>&nbsp; &nbsp;<input
               type="number"
               id="bidAmount"
             />
           </p>
-          <br /><br />
-          <div class="row justify-content-center" id="address">
-            <!-- <div class="col-md-2">Shipping Address:</div>
-            <div class="col-md-2">
-              <select class="form-select" id="Address_option">
-                <option value="1">Home</option>
-                <option value="2">Office</option>
-                <option value="3">Other</option>
-              </select>
-            </div> -->
-          </div>
-          <!-- <div class="text-center">
-            <button
-              type="submit"
-              class="btn btn-secondary"
-              value="{{ products.id }}"
-              id="add-cart"
-            >
-              Add to cart
-            </button>
-            <button
-              type="submit"
-              class="btn btn-secondary"
-              value="{{ products.id }}"
-              id="buy"
-            >
-              Buy
-            </button>
-          </div> -->
+          <div class="container mt-0">
+            <div class="row">
+              <div class="col-md-8 mx-auto">
+                <div class="card" style="border: none;">
+                  <div class="card-body">
+                    <input type="text" class="form-control message-box mb-3" rows="1" placeholder="Type your message here..."></textarea>
+                    <!-- <button class="btn btn-primary btn-block">Send</button> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>          
           <div style="text-align: center">
             <button
               type="button"
@@ -88,85 +72,20 @@
             >
               Add to Cart
             </button>
-            <button
+            <input
               type="submit"
               class="btn btn-primary"
               style="margin-top: 4%"
               id="sendRequests"
-              onclick="sendRequests()"
+              value=" Request to Buy"
             >
-              Request to Buy
-            </button>
+            <!-- </button> -->
           </div>
         </div>
       </div>
     </div>
   </div>
   <!-- <script>
-    $(document).on("click", "#buy", function (e) {
-      e.preventDefault();
-      $.ajax({
-        type: "POST",
-        url: "localhost:8000/buy/",
-        data: {
-          product_id: $("#buy").val(),
-          product_qty: $("#buy option:selected").text(),
-          address: $("#address option:selected").text(),
-
-          csrfmiddlewaretoken: "{{ csrf_token }}",
-          action: "post",
-        },
-        success: function (json) {
-          console.log(json);
-          // document.getElementById("cart_quantity").innerText = json.qty;
-        },
-        error: function (xhr, errmsg, err) {
-          // Handle error if needed
-          console.log(err);
-        },
-      });
-    });
-
-    $(document).on("click", "#add-cart", function (e) {
-      e.preventDefault();
-      $.ajax({
-        type: "POST",
-        url: "cart_add/",
-        data: {
-          product_id: $("#add-cart").val(),
-          product_qty: $("#qty-cart option:selected").text(),
-          csrfmiddlewaretoken: "{{ csrf_token }}",
-          action: "post",
-        },
-        success: function (json) {
-          console.log(json);
-          document.getElementById("cart_quantity").innerText = json.qty;
-        },
-        error: function (xhr, errmsg, err) {
-          // Handle error if needed
-        },
-      });
-    });
-  </script> -->
-
-  <script>
-    var n = "{{ products.quantity }}";
-
-    // Get a reference to the select element
-    var selectElement = document.getElementById("Quantity_option");
-
-    // Loop from 1 to n to generate dropdown options
-    for (var i = 1; i <= n; i++) {
-      // Create an option element
-      var optionElement = document.createElement("option");
-
-      // Set the value and text of the option
-      optionElement.value = i;
-      optionElement.textContent = i;
-
-      // Append the option to the select element
-      selectElement.appendChild(optionElement);
-    }
     var productId = "{{ products.id }}";
     // Function to send both POST and GET requests
     function sendRequests() {
@@ -211,6 +130,6 @@
       //   // Handle response if needed
       // });
     }
-  </script>
-</div>
+  </script> -->
+</form>
 {% endblock %}
