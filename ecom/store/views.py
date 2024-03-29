@@ -58,6 +58,23 @@ def order_expanded(request,pk):
     ordered = Order.objects.get(id=pk)
     return render(request,'order_expanded.html',{'ordered': ordered , 'customer': customer, 'address': address })
 @login_required(login_url='login')
+def my_requests(request):
+    # products = Product.objects.all()
+    # orders = Order.objects.filter(customer=request.user.customer)
+    accepted_requests = request.user.customer.order_set.all()
+    rejected_requests = request.user.customer.order_set.all()
+    pending_requests = request.user.customer.order_set.all()
+    return render(request,'my_requests.html',{'accepted_requests': accepted_requests , 'rejected_requests': rejected_requests , 'pending_requests': pending_requests})
+@login_required(login_url='login')
+def success_requests_expanded(request,pk):
+    # deliveries = Order.objects.filter(product__seller=request.user.customer)
+    # seller_details=deliveries.get(id=pk)
+    customer = request.user.customer
+    addresses = customer.address_set.all()
+    address = addresses[0]
+    requested = Order.objects.get(id=pk)
+    return render(request,'success_requests_expanded.html',{'requested': requested , 'customer': customer, 'address': address })
+@login_required(login_url='login')
 def products(request):
     products= request.user.customer.product_set.all()
     # products = Product.objects.all()
