@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import Category, Product, Customer, Order
+from .models import Category, Product, Customer, Order, Request
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -59,11 +59,9 @@ def order_expanded(request,pk):
     return render(request,'order_expanded.html',{'ordered': ordered , 'customer': customer, 'address': address })
 @login_required(login_url='login')
 def my_requests(request):
-    # products = Product.objects.all()
-    # orders = Order.objects.filter(customer=request.user.customer)
-    accepted_requests = request.user.customer.order_set.all()
-    rejected_requests = request.user.customer.order_set.all()
-    pending_requests = request.user.customer.order_set.all()
+    accepted_requests = request.user.customer.request_set.filter(status='accepted')
+    rejected_requests = request.user.customer.request_set.filter(status='rejected')
+    pending_requests = request.user.customer.request_set.filter(status='pending')
     return render(request,'my_requests.html',{'accepted_requests': accepted_requests , 'rejected_requests': rejected_requests , 'pending_requests': pending_requests})
 @login_required(login_url='login')
 def success_requests_expanded(request,pk):
@@ -72,7 +70,7 @@ def success_requests_expanded(request,pk):
     customer = request.user.customer
     addresses = customer.address_set.all()
     address = addresses[0]
-    requested = Order.objects.get(id=pk)
+    requested = Request.objects.get(id=pk)
     return render(request,'success_requests_expanded.html',{'requested': requested , 'customer': customer, 'address': address })
 @login_required(login_url='login')
 def products(request):
@@ -106,26 +104,26 @@ def about(request):
     #     Category.objects.create(name= x)
     # res = requests.get('https://fakestoreapi.com/products')
     # response = json.loads(res.text)
-    # print(response)
+    # # print(response)
     # for x in response:
     #     category = Category.objects.get_or_create(name=x['category'])[0]
     #     Product.objects.create(p_name=x['title'], price=x['price'], category=category, description=x['description'], image=x['image'], is_sale=True, sale_price=x['price']*0.8)
-        # Product.objects.create(p_name=x['title', ])
+    #     Product.objects.create(p_name=x['title', ])
     
     # res = requests.get('https://fakestoreapi.com/products')
     # response = json.loads(res.text)
-    # # print(response)
+    # print(response)
     # for x in response:
     #     url= x['image']
     #     resp = requests.get(url)
     #     with open('media/products/'+str(x['id'])+'.jpg', 'wb') as f:
     #         f.write(resp.content)
-        # category = Category.objects.get_or_create(name=x['category'])[0]
-        # Product.objects.create(p_name=x['title'], price=x['price'], category=category, description=x['description'], image=x['image'], is_sale=True, sale_price=x['price']*0.8)
+    #     category = Category.objects.get_or_create(name=x['category'])[0]
+    #     Product.objects.create(p_name=x['title'], price=x['price'], category=category, description=x['description'], image=x['image'], is_sale=True, sale_price=x['price']*0.8)
     # return render(request,'about.html')
     # res = requests.get('https://fakestoreapi.com/products')
     # response = json.loads(res.text)
-    # print(response)
+    # # print(response)
     # for x in response:
     #     category = Category.objects.get_or_create(name=x['category'])[0]
     #     Product.objects.create(p_name=x['title'], price=x['price'], category=category, description=x['description'], image='products/'+str(x['id'])+'.jpg', is_sale=True, sale_price=x['price']*0.8)
@@ -150,6 +148,13 @@ def logout_user(request):
     logout(request)
     messages.success(request,("you have beeen logged out ..."))
     return redirect('home')
+#function for checking if email entered is already in use in registration view
+def is_email_present(email):
+    try:
+        customer=User.objects.get(email=email)
+        return False
+    except:
+        return True
 def register_user(request):
     form = SignUpForm()
     form1 = AddressForm()
@@ -163,33 +168,37 @@ def register_user(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
             email = form.cleaned_data['email']
-            user=authenticate(username=username,password=password,email=email)
-            # print(user)
-            if user is None:      
-                print('creating user....')     
-                user = form.save()    
-                customer=Customer.objects.create(
-                user=user,
-                # city=form.cleaned_data['city'],
-                phone=form.cleaned_data['phone']
-                )
-                address = form1.save(commit=False)
-                customer.save()
-                address.customer = customer
-                print('creating address....')
-                address.save()
-                login(request,user)
-                # emailObject = EmailMessage(
-                #     'Thanks for registering into Acraiders',
-                #     'We are happy to have you onboard',
-                #     settings.EMAIL_HOST_USER,
-                #     [email],
-                # )
-                # emailObject.send(fail_silently=True)
-                messages.success(request,("you have Registered ..."))
-                return redirect('home')
+            if(is_email_present(email)):
+                #checking if user already exists
+                user=authenticate(username=username,password=password,email=email)
+                # print(user)
+                if user is None:     
+                    print('creating user....')     
+                    user = form.save()    
+                    customer=Customer.objects.create(
+                    user=user,
+                    # city=form.cleaned_data['city'],
+                    phone=form.cleaned_data['phone']
+                    )
+                    address = form1.save(commit=False)
+                    customer.save()
+                    address.customer = customer
+                    print('creating address....')
+                    address.save()
+                    login(request,user)
+                    # emailObject = EmailMessage(
+                    #     'Thanks for registering into Acraiders',
+                    #     'We are happy to have you onboard',
+                    #     settings.EMAIL_HOST_USER,
+                    #     [email],
+                    # )
+                    # emailObject.send(fail_silently=True)
+                    messages.success(request,("you have Registered ..."))
+                    return redirect('home')
+                else:
+                    messages.success(request,("Sorry, couldn't reach server. Please try again...."))
             else:
-                messages.success(request,("Sorry...... entered credentials are already in use. Try logging in....or enter new credentials...."))
+                messages.success(request,("Sorry...... entered email is already in use. Try logging in....or enter new email...."))
                 return redirect('register')
         else:
             # messages.success(request,("Whoops...... Form data is invalid...."))
@@ -282,4 +291,35 @@ def buy(request):
             messages.success(request,("buy failure..."))
             return HttpResponse(status=400)
     else:
-        return redirect('home')    
+        return redirect('home')   
+@login_required(login_url='login')
+def request(request):
+    if request.method == "POST":
+        print('post requested....')
+        try:
+            product_id = request.POST['product_id']
+            print(product_id)
+            # product = Product.objects.get(id=product_id)
+            product_qty = request.POST['product_qty']
+            product_qty = int(product_qty)
+            print(product_qty)
+            customer_message = request.POST['customer_message']
+            print(customer_message)
+            product_cost = int(request.POST['product_cost'])
+            print(product_cost)
+            # customer = request.user.customer
+            pending_request = Request()
+            pending_request.product = Product.objects.get(id=product_id)
+            pending_request.customer = request.user.customer
+            pending_request.quantity = product_qty
+            pending_request.cost = product_cost
+            pending_request.customer_message = customer_message
+            pending_request.save()
+            messages.success(request,("request successful..."))
+            return redirect('my_requests')
+        except Exception as e:
+            print(e)
+            messages.success(request,("request failure...try again..."))
+            return HttpResponse(status=400)
+    else:
+        return redirect('home')

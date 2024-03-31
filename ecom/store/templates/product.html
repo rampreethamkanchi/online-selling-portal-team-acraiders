@@ -1,7 +1,8 @@
 {% extends 'base.html' %} 
 {% block content %}
 <br /><br />
-<form class="container" style="flex: 1">
+<form class="container" style="flex: 1" action="{%url 'request' %}" method="post">
+  {% csrf_token %}
   <div class="card mb-3">
     <div class="row g-0">
       <div class="col-md-4">
@@ -40,9 +41,10 @@
                 <option value="3">3</option>
               </select>
             </div> -->
+            <input type="hidden" name="product_id" value="{{products.id}}">
             <div class="col-md-2"><b>Quantity:</b></div>
             <div class="col-md-2">
-              <input type="number" id="quantity" name="quantity" min="1" max="{{products.quantity}}" value="1">
+              <input type="number" id="quantity" name="product_qty" min="1" max="{{products.quantity}}" value="1">
             </div>
           </div>
           <br>
@@ -50,6 +52,7 @@
             <b>Price to Bid:</b>&nbsp; &nbsp;<input
               type="number"
               id="bidAmount"
+              name="product_cost"
             />
           </p>
           <div class="container mt-0">
@@ -57,7 +60,7 @@
               <div class="col-md-8 mx-auto">
                 <div class="card" style="border: none;">
                   <div class="card-body">
-                    <input type="text" class="form-control message-box mb-3" rows="1" placeholder="Type your message here..."></textarea>
+                    <input type="text" class="form-control message-box mb-3" name="customer_message" rows="1" placeholder="Type your message here..."></textarea>
                     <!-- <button class="btn btn-primary btn-block">Send</button> -->
                   </div>
                 </div>
