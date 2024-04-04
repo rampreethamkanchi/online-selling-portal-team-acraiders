@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<br><br>
+
+<div class=container style="flex: 1;">
+
+    <div class="card mb-3">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="{{delivery.product.image.url }}" class="img-fluid rounded-start" alt="..." style="width: 100%; height: 100%;">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <!-- <h5 class="card-title text-center">{{ products.p_name }}</h5>
+                    <p class="card-title text-center">{{products.description}}</p>  -->
+                    <!-- <br><br> -->
+                    <!-- <h3 style="text-align: center;">Delivery Details:</h3> -->
+                    <h3 style="text-align: center; margin-bottom: 20px; margin-top: 20px;"><b>Delivery to:</b></h3>
+                        <div class="container text-center">
+                            <div class="profile">
+                            <!-- <span style="font-size: 48px;">&#128100;</span> -->
+                            <!-- <p><b>Order ID:</b>{{ordered.id}} </p> -->
+                            <!-- <p><b>Price Bidded:</b>{{ordered.p_bid}} </p> -->
+                            <p><b>Name of the User : </b> {{delivery.customer.user.username}} </p>   
+                            <p><b>Address to be delivered :</b> {{address.house_no}},{{address.street}},{{address.city}},{{address.state}},{{address.pincode}}</p>
+                            <!-- <p><b>Email ID : </b> {{delivery.customer.user.email}}</p> -->
+                            <!-- <p><b>Mobile No &#9742;: </b> {{delivery.customer.phone}}</p> -->
+                        </div>
+                    </div>
+                    <h3 style="text-align: center; margin-bottom: 20px; margin-top: 20px;"><b>Order Details:</b></h3>
+                    <div class="container text-center">
+                        <div class="profile">
+                            <!-- <span style="font-size: 48px;">Order details</span> -->
+                            <p><b>Accepted price : </b> {{delivery.cost}} </p>
+                            <p><b>Quantity Ordered : </b> {{delivery.quantity}} </p>
+                            <p><b>Date of Ordering : </b> {{delivery.date}}</p>
+                        </div>
+                        <!-- <div style="text-align: center;">
+                            <button type="button" class="btn btn-primary" style="margin-bottom: 2%;">Accept</button>
+                            <button type="button" class="btn btn-danger" style="margin-bottom: 2%;">Reject</button>
+                        </div> -->
+                    </div>
+                    <br/><br/>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock %}

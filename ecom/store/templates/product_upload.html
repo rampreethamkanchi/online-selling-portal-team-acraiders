@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<br /><br />
+
+<div class=container style="flex: 1;">
+    <div class="card mb-3">
+        <div class="row g-0">
+            <div class="col-md-4" >
+                <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="..." width="100%" height="100%">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <div class="container text-center">
+                        <div class="profile">
+                            <span style="font-size: 30px; margin-bottom: 20px;" ><b>Product Details:</b></span>
+                            <p><b>Product Name&nbsp;:</b>&nbsp;{{product.p_name}} </p>
+                            <p><b>Product Description&nbsp;:</b>&nbsp;{{product.description}}</p>
+                            <p><b>Sale Price&nbsp;:</b>&nbsp;{{product.price}}₹</p>
+                            <p><b>Remaining Quantity&nbsp;:</b>&nbsp;{{product.quantity}}</p>
+                            <p><b>Category&nbsp;:</b>&nbsp;{{product.category}}</p>
+                            <p><b>City&nbsp;:</b>&nbsp;{{product.city}}</p>
+                            <p><b>Age&nbsp;:</b>&nbsp;{{product.age}}</p>
+                        </div>
+                        <button type="button" class="btn btn-primary" style="margin-bottom: 2%;">Edit Details</button>
+                    </div>
+                <br/><br/>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock %}

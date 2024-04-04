@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form action="">
+<div class="container text-center" style="flex: 1;">
+    <div class="profile" style="margin-top: 50px;" >
+        <span style="font-size: 50px;">&#128100;</span>
+        <p ><b>Username : </b><input type="text" value="{{customer.user.username}}" name="username"></p>
+        <p ><b>Email : </b><input type="email" value="{{customer.user.email}}" name="email"></p>
+        <!-- <p ><b>Password&nbsp;:</b>&nbsp;{{customer.user.password}}</p> -->
+        <p ><b>Mobile No &#9742;: </b> <input type="text" value="{{customer.phone}}" name="phone"></p>
+        <!-- <p ><b>City :</b> {{address.city}}</p> -->
+        <p ><b>City : </b> <input type="text" value="{{address.city}}" name="city"></p>
+        <!-- <p ><b>State :</b> {{address.state}}</p> -->
+        <p ><b>State : </b> <input type="text" value="{{address.state}}" name="state"></p>
+        <!-- <p ><b>Pincode :</b> {{address.pincode}}</p> -->
+        <p ><b>Pincode : </b> <input type="text" value="{{address.pincode}}" name="pincode"></p>
+        <!-- <p ><b>Street :</b> {{address.street}}</p> -->
+        <p ><b>Street :</b>  <input type="text" value="{{address.street}}" name="street"></p>
+        <!-- <p ><b>House No :</b> {{address.house_no}}</p> -->
+        <p ><b>House No :</b> <input type="text" value="{{address.house_no}}" name="house_no"></p>
+    </div>
+    <button type="button" class="btn btn-primary" style="margin-bottom: 2%;"><a href="/profile" style="text-decoration: none; color: white;">Save & send OTP</a></button>
+</div>
+</form>
+
+{% endblock %}

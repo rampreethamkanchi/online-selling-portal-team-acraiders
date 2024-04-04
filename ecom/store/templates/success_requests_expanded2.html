@@ -1,0 +1,131 @@
+{% extends 'base.html' %} {% block content %}
+
+<br /><br />
+
+<div class="container" style="flex: 1;">
+  <div class="card mb-3">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img
+          src="{{ requested.product.image.url }}"
+          class="img-fluid rounded-start"
+          alt="..."
+          style="width: 100%; height: 100%;"
+        />
+      </div>
+      <div class="col-md-8">
+        <!-- <div class="card-body">
+          <h5 class="card-title text-center">{{ ordered.product.p_name }}</h5>
+          <p class="card-title text-center">{{ordered.product.description}}</p>
+          <br />,
+        </div> -->
+        <h3 style="text-align: center; margin-bottom: 20px; margin-top: 20px;"><b>Delivery Details:</b></h3>
+           <div class="container text-center">
+              <div class="profile">
+                  <!-- <span style="font-size: 48px;">&#128100;</span> -->
+                  <!-- <p><b>Order ID:</b>{{ordered.id}} </p> -->
+                  <!-- <p><b>Price Bidded:</b>{{ordered.p_bid}} </p> -->
+                  <p><b>Address to be delivered :</b> {{address.house_no}},{{address.street}},{{address.city}},{{address.state}},{{address.pincode}}</p>
+                  <p><b>Email ID : </b> {{customer.user.email}}</p>
+                  <p><b>Mobile No &#9742;: </b> {{customer.phone}}</p>
+                  <p><b>Date of Ordering : </b> {{ordered.date}}</p>
+                </div>
+          </div>
+          <!-- <h3 style="text-align: center; margin-bottom: 20px; margin-top: 20px;"><b>Seller Details:</b></h3>
+           <div class="container text-center">
+              <div class="profile">
+                  <p><b>Seller Name :</b></p>
+                  <p><b>Email ID : </b> {{s_d.customer.user.email}}</p>
+                  <p><b>Mobile No &#9742;: </b> {{s_d.customer.phone}}</p>
+                  <p><b>Expected time : </b> 1 week</p>
+                </div>
+          </div> -->
+          <h3 style="text-align: center; margin-bottom: 20px;"><b>Order Summary:</b></h3>
+          <div class="container text-center">
+            <div class="profile">
+                <!-- <span style="font-size: 48px;">&#128100;</span> -->
+                <p><b>Price Bidded :</b>{{requested.p_bid}} </p>
+                <p><b>Order ID : </b>{{requested.id}} </p>
+                <p><b>Actual Cost : </b>{{requested.product.price}} </p>
+                <p><b>Sale Price : </b>{{requested.product.sale_price}}</p>
+                <!-- <p>You just saved {{ordered.product.price}}-{{ordered.product.sale_price}}</p> -->
+                <div style="color: green;">
+                <script>
+                  var originalPrice = "{{ requested.product.price|safe }}";
+                  originalPrice = parseInt(originalPrice);
+                  var salePrice = "{{requested.product.sale_price}}";
+                  salePrice = parseInt(salePrice);
+                  var savedAmount = originalPrice - salePrice;
+                  document.write("<p><b>You just saved ₹" + savedAmount + " on this order</b></p>");
+                </script>
+                </div>
+                {% comment %} <div style="text-align: center">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                  >
+                  <a href="#" style="text-decoration: none; color: white;">Pay Now</a>
+                  </button>
+                </div> {% endcomment %}
+
+                {% comment %} adding paypal button {% endcomment %}
+                <!-- Set up a container element for the button -->
+
+                    
+                      
+                  
+                  <div class="container text-center" id="paypal-button-container" style="max-width:300px;"></div>
+
+                  <!-- Include the PayPal JavaScript SDK -->
+                  
+                  <script src="https://www.paypal.com/sdk/js?client-id=AUbhf9UrkiXfJ845HL9_Tj7SQGodG8dfrr7geCbJX7OwdOSKpbTLs4SgvRhE9McjSp2NmWdY_itEg4Qh&currency=USD&buyer-country=US"></script>
+
+                
+                  <script>
+                      // Render the PayPal button into #paypal-button-container
+                          paypal.Buttons({
+                                  style: {
+                                      layout: 'vertical',
+                                      color:  'gold',
+                                      shape:  'pill',
+                                      label:  'pay',
+                                  },
+                              // Set up the transaction
+                                  createOrder: function(data, actions) {
+                                    // Conversion rate from INR to USD
+                                    const conversionRate = 0.01368;
+                                
+                                    // Convert the price from INR to USD
+                                    const priceInINR = parseFloat('{{requested.product.sale_price}}');
+                                    const priceInUSD = priceInINR * conversionRate;
+                                
+                                    // Create the order
+                                    return actions.order.create({
+                                        purchase_units: [{
+                                            amount: {
+                                                value: priceInUSD.toFixed(2)  // Use toFixed(2) to round to 2 decimal places
+                                            }
+                                        }]
+                                    });
+                                },
+                                  // Finalize the transaction
+                                  onApprove: function(data, actions) {
+                                      return actions.order.capture().then(function(orderData) {
+                                          // Successful capture! For demo purposes:
+                                          console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                                          let transaction = orderData.purchase_units[0].payments.captures[0];
+                                          alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nThanks for using PayPal');
+                                      });
+                                      }
+                                
+                          }).render('#paypal-button-container');
+
+                  </script>
+              </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br /><br />
+{% endblock %}

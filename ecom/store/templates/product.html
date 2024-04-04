@@ -1,0 +1,143 @@
+{% extends 'base.html' %} 
+{% block content %}
+<br /><br />
+<form class="container" style="flex: 1" action="{%url 'request' %}" method="post">
+  {% csrf_token %}
+  <div class="card mb-3">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img
+          src="{{ products.image.url }}"
+          class="img-fluid rounded-start"
+          alt="..."
+          style="width: 100%;"
+        />
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title text-center">{{ products.p_name }}</h5>
+          <p class="card-title text-center">{{products.description}}</p>
+          <br />
+          {% if products.is_sale %}
+          <div class="d-flex justify-content-center small text-warning mb-2">
+            <div class="bi-star-fill"></div>
+            &nbsp;&nbsp;Sale!!&nbsp;&nbsp;
+            <!-- <div class="bi-star-fill"></div> -->
+          </div>
+
+          <!-- Product price-->
+          <p class="text-center">
+            <strike>₹{{products.price}}</strike>&nbsp;₹{{products.sale_price}}
+          </p>
+
+          {% else %} 
+          <!-- ₹{{products.price}}  -->
+          <p class="text-center">
+            <strike>₹{{products.price}}</strike>&nbsp;₹{{products.sale_price}}
+          </p>
+          {% endif %}
+          <br /><br />
+          <div class="row justify-content-center" id="qty-cart">
+            <!-- <div class="col-md-2">Quantity:</div>
+            <div class="col-md-2">
+              <select class="form-select" id="Quantity_option">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select>
+            </div> -->
+            <input type="hidden" name="product_id" value="{{products.id}}">
+            <div class="col-md-2"><b>Quantity:</b></div>
+            <div class="col-md-2">
+              <input type="number" id="quantity" name="product_qty" min="1" max="{{products.quantity}}" value="1">
+            </div>
+          </div>
+          <br>
+          <p style="text-align: center">
+            <b>Enter the negiotating price:</b>&nbsp; &nbsp;<input
+              type="number"
+              id="bidAmount"
+              name="product_cost"
+            />
+          </p>
+          <div class="container mt-0">
+            <div class="row">
+              <div class="col-md-8 mx-auto">
+                <div class="card" style="border: none;">
+                  <div class="card-body">
+                    <input type="text" class="form-control message-box mb-3" name="customer_message" rows="1" placeholder="Type your message here..."></textarea>
+                    <!-- <button class="btn btn-primary btn-block">Send</button> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>          
+          <div style="text-align: center">
+            <!-- <button
+              type="button"
+              class="btn btn-primary"
+              style="margin-top: 4%"
+            >
+              Add to Cart
+            </button> -->
+            <input
+              type="submit"
+              class="btn btn-primary"
+              style="margin-top: 2%"
+              id="sendRequests"
+              value="Negotiate"
+            >
+            <!-- </button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <script>
+    var productId = "{{ products.id }}";
+    // Function to send both POST and GET requests
+    function sendRequests() {
+      // Get the selected values
+      var quantityValue = document.getElementById("Quantity_option").value;
+      // var addressValue = document.getElementById("Address_option").value;
+      var bidAmount = document.getElementById("bidAmount").value;
+      // if(addressValue==1){
+      //   addressopt="Home";
+      // }
+      // else if(addressValue==2){
+      //   addressopt="Office";
+      // }
+      // else{
+      //   addressopt="Other";
+      // }
+
+      // Object to be sent with the POST request
+      var postData = {
+        bid_amount: bidAmount,
+        product_id: productId,
+        product_qty: quantityValue,
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+        // Add more key-value pairs as needed
+      };
+      console.log(postData);
+
+      // Send POST request with the postData object
+      $.post('{%url "buy" %}', postData, function (data, status) {
+        console.log("POST request status: " + status);
+        if(status=='success'){  
+          //redirect to the buySuccess page
+          window.location.href = "{% url 'buySuccess' %}";
+        }
+        else{
+          window.location.href = "{% url 'buyFailure' %}";
+        }
+      });
+      // Send GET request
+      // $.get("#", function(data, status) {
+      //   console.log("GET request status: " + status);
+      //   // Handle response if needed
+      // });
+    }
+  </script> -->
+</form>
+{% endblock %}

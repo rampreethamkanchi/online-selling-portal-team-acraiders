@@ -1,0 +1,73 @@
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .login-container {
+      max-width: 400px;
+      margin: 100px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .register-link {
+      text-align: center;
+      margin-top: 15px;
+    }
+  </style>
+  
+</head>
+<body>
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+    <header class="py-5" style="background-image: url('../../media/products/ecommerce-2140604_1280.jpg'); background-position: center center; background-repeat: no-repeat;background-size:cover;background-color: rgba(0, 0, 0, 0.65); background-blend-mode: multiply; max-height: 300px;">
+      <div class="container px-4 px-lg-5 my-5">
+          <div class="text-center text-white">
+              <h1 class="display-4 fw-bolder" style="color:wheat;">REGISTER</h1>
+          </div>
+      </div>
+  </header>
+<br><br>
+<div class="container">
+    <div class="row">
+        <div class="col-8 mx-auto">
+            <center>
+                
+                <form method="post" action="{% url 'register' %}">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    {{form1|crispy}}
+                    <br><br>
+                    <button type="submit" class="btn btn-secondary">Register</button>
+                </form>
+            </center>
+            
+        </div>
+    </div>
+</div>
+<br><br>
+</body>
+</html>
+

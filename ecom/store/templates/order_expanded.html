@@ -1,0 +1,172 @@
+{% extends 'base.html' %} {% block content %}
+
+<br /><br />
+
+<div class="container" style="flex: 1;">
+  <div class="card mb-3">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img
+          src="{{ ordered.product.image.url }}"
+          class="img-fluid rounded-start"
+          alt="..."
+          style="width: 100%; height: 100%;"
+        />
+      </div>
+      <div class="col-md-8">
+        <!-- <div class="card-body">
+          <h5 class="card-title text-center">{{ ordered.product.p_name }}</h5>
+          <p class="card-title text-center">{{ordered.product.description}}</p>
+          <br />,
+        </div> -->
+        <h3 style="text-align: center; margin-bottom: 20px; margin-top: 20px;"><b>Delivery Details:</b></h3>
+           <div class="container text-center">
+              <div class="profile">
+                  <!-- <span style="font-size: 48px;">&#128100;</span> -->
+                  <!-- <p><b>Order ID:</b>{{ordered.id}} </p> -->
+                  <!-- <p><b>Price Bidded:</b>{{ordered.p_bid}} </p> -->
+                  <p><b>Address to be delivered :</b> {{address.house_no}},{{address.street}},{{address.city}},{{address.state}},{{address.pincode}}</p>
+                  <p><b>Email ID : </b> {{customer.user.email}}</p>
+                  <p><b>Mobile No &#9742;: </b> {{customer.phone}}</p>
+                  <p><b>Date of Ordering : </b> {{ordered.date}}</p>
+                </div>
+          </div>
+          <h3 style="text-align: center; margin-bottom: 20px; margin-top: 20px;"><b>Seller Details:</b></h3>
+           <div class="container text-center">
+              <div class="profile">
+                  <p><b>Seller Name : </b>{{seller.user.username}}</p>
+                  <!-- <p><b>Email ID : </b> {{seller.user.email}}</p> -->
+                  <!-- <p><b>Mobile No &#9742;: </b> {{seller.phone}}</p> -->
+                  <p><b>Expected time : </b> 1 week</p>
+                </div>
+          </div>
+          <h3 style="text-align: center; margin-bottom: 20px;"><b>Order Summary:</b></h3>
+          <div class="container text-center">
+            <div class="profile">
+                <!-- <span style="font-size: 48px;">&#128100;</span> -->
+                <p><b>Quantity :</b>{{ordered.quantity}} </p>
+                <p><b>Price Bidded :</b>{{ordered.cost}} </p>
+                <p><b>Order ID : </b>{{ordered.id}} </p>
+                <p><b>Actual Cost (per item) : </b>{{ordered.product.price}} </p>
+                <p><b>Sale Price (per item): </b>{{ordered.product.sale_price}}</p>
+                <!-- <p>You just saved {{ordered.product.price}}-{{ordered.product.sale_price}}</p> -->
+                <div style="color: green;">
+                <script>
+                  var originalPrice = "{{ ordered.product.sale_price|safe }}";
+                  var quantity = "{{ ordered.quantity|safe }}";
+                  originalPrice = parseInt(originalPrice);
+                  quantity = parseInt(quantity);
+                  originalPrice*= quantity;
+                  var salePrice = "{{ordered.cost}}";
+                  salePrice = parseInt(salePrice);
+                  var savedAmount = originalPrice - salePrice;
+                  document.write("<p><b>You just saved ₹" + savedAmount + " on this order</b></p>");
+                </script>
+                </div>
+                <!-- Button trigger modal -->
+                <div>
+                  <!-- <h6>Any issues click here</h6> -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-bottom: 2%;">
+                  issues
+                </button>
+              </div>
+
+              <!-- Modal -->
+              <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="staticBackdropLabel">Quick Fixes</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="menu">
+                        <div class="menu-option" onclick="toggleContent('option1')">
+                          <input type="checkbox" class="checkbox">
+                          Option 1
+                        </div>
+                          <div id="option1Content" class="expanded-content">
+                            Expanded content for Option 1
+                          </div>
+                          <div class="menu-option" onclick="toggleContent('option2')">Option 2</div>
+                            <div id="option2Content" class="expanded-content">
+                              Expanded content for Option 2
+                            </div>
+                            <div class="menu-option" onclick="toggleContent('option3')">Option 3</div>
+                            <div id="option3Content" class="expanded-content">
+                              Expanded content for Option 3
+                            </div>
+                            <div class="menu-option" onclick="toggleContent('option4')">Option 4</div>
+                            <div id="option4Content" class="expanded-content">
+                              Expanded content for Option 4
+                            </div>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Submit</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  /* Style for the menu options */
+  .menu-option {
+            cursor: pointer;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+  /* Style for the expanded content */
+  .expanded-content {
+      display: none;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-top: none;
+  }
+
+  /* Style for the active menu option */
+  .active {
+      background-color: lightgray;
+  }
+</style>
+<script>
+        function toggleContent(optionId) {
+            var content = document.getElementById(optionId + 'Content');
+            var allContents = document.querySelectorAll('.expanded-content');
+            // var isExpanded = content.style.maxHeight !== '0px';
+            // Hide all content
+            allContents.forEach(function(element) {
+                element.style.display = 'none';
+            });
+            
+            // Show content of the clicked option
+            content.style.display = 'block';
+            
+            // if (!isExpanded) {
+            //     content.style.maxHeight = content.scrollHeight + 'px';
+            // }
+            // if (isExpanded) {
+            //     content.style.display = "none";
+            // }
+            // Remove 'active' class from all options
+            var allOptions = document.querySelectorAll('.menu-option');
+            allOptions.forEach(function(element) {
+                element.classList.remove('active');
+            });
+            
+            // Add 'active' class to clicked option
+            var clickedOption = document.getElementById(optionId);
+            clickedOption.classList.add('active');
+        }
+    </script>
+{% endblock %}
