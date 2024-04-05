@@ -59,7 +59,7 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = 'categories'
 def get_default_category():
-    return Category.objects.get_or_create(name='others')[0].id
+    return Category.objects.get_or_create(name='Miscellaneous and Others')[0].id
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
