@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import Category, Product, Customer, Order, Request
+from .models import Category, Product, Customer, Order, Request,Chat
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -12,10 +12,18 @@ from django.db.models import Q
 from django.http import HttpResponse
 import requests
 import json 
-# from django.core.mail import send_mail
-# from django.core.mail import EmailMessage
-# from django.conf import settings
-# Create your views here.
+from django.core.mail import send_mail
+from django.core.mail import EmailMessage
+from django.conf import settings
+def send_mail(email, message):
+    emailObject = EmailMessage(
+                'Message from Acraiders',
+                message,
+                settings.EMAIL_HOST_USER,
+                [email],
+            )
+    emailObject.send(fail_silently=True)
+    print("sent, mail successfully")
 @login_required(login_url='login')
 def category(request,foo):
     try:
@@ -78,7 +86,8 @@ def success_requests_expanded(request,pk):
     addresses = customer.address_set.all()
     address = addresses[0]
     requested = Request.objects.get(id=pk)
-    return render(request,'success_requests_expanded.html',{'requested': requested , 'customer': customer, 'address': address })
+    chats = requested.chat_set.all().order_by('created_at')
+    return render(request,'success_requests_expanded.html',{'requested': requested , 'customer': customer, 'address': address, 'chats':chats })
 @login_required(login_url='login')
 def products(request):
     products= request.user.customer.product_set.all()
@@ -357,6 +366,8 @@ def request(request):
             print(customer_message)
             product_cost = int(request.POST['product_cost'])
             print(product_cost)
+            # create a chat from customer message
+
             # customer = request.user.customer
             pending_request = Request()
             pending_request.product = Product.objects.get(id=product_id)
@@ -364,9 +375,15 @@ def request(request):
             pending_request.quantity = product_qty
             pending_request.cost = product_cost
             pending_request.customer_message = customer_message
-            pending_request.save()
-            product = Product.objects.get(id=product_id)
-            seller = product.seller
+            success_request=pending_request.save()
+            pending_chat = Chat()
+            pending_chat.customer= request.user.customer
+            pending_chat.request = success_request
+            pending_chat.message= customer_message
+            pending_chat.save()
+            # chat = Chat.objects.create(message=customer_message,customer=request.user.customer,request=success_request)
+            # product = Product.objects.get(id=product_id)
+            # seller = product.seller
             # seller_email = seller.user.email
             # emailObject = EmailMessage(
             #             'You have a new request',

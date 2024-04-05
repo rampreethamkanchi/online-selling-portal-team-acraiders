@@ -3,6 +3,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from .models import Product, Category, Address
 from django.forms import ModelForm
+from phonenumber_field.modelfields import PhoneNumberField
+
 
 
 class SignUpForm(UserCreationForm):
@@ -10,11 +12,11 @@ class SignUpForm(UserCreationForm):
 	# first_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First Name'}))
 	# last_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Last Name'}))
 	# city = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'City'}))
-	phone = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Phone'}))
+	# phone = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Phone'}))
 
 	class Meta:
 		model = User
-		fields = ('username', 'password1', 'password2','email','phone')
+		fields = ('username','first_name', 'last_name', 'password1', 'password2','email')
 		# fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
 
 	def __init__(self, *args, **kwargs):
@@ -38,6 +40,15 @@ class SignUpForm(UserCreationForm):
 		self.fields['password2'].widget.attrs['placeholder'] = 'Confirm Password'
 		self.fields['password2'].label = ''
 		self.fields['password2'].help_text = '<span class="form-text text-muted"><small>Enter the same password as before, for verification.</small></span>'
+		self.fields['first_name'].widget.attrs['class'] = 'form-control'
+		self.fields['first_name'].widget.attrs['placeholder'] = 'First Name'
+		self.fields['first_name'].label = ''
+		self.fields['last_name'].widget.attrs['class'] = 'form-control'
+		self.fields['last_name'].widget.attrs['placeholder'] = 'Last Name'
+		self.fields['last_name'].label = ''
+		self.fields['phone'].widget.attrs['class'] = 'form-control'
+		self.fields['phone'].widget.attrs['placeholder'] = 'Phone'
+		self.fields['phone'].label = ''
 
 class ProductForm(ModelForm):
 	# p_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Product Name'}))
@@ -51,7 +62,7 @@ class ProductForm(ModelForm):
 	# sale_price = forms.DecimalField(label="", max_digits=6, decimal_places=2, widget=forms.NumberInput(attrs={'class':'form-control', 'placeholder':'Sale Price'}))
 	class Meta:
 		model = Product
-		fields = ('p_name', 'price', 'category', 'description', 'image', 'city', 'age', 'quantity', 'sale_price')
+		fields = ('p_name','m_name', 'price', 'category', 'description', 'image1','image2','image3','image4','image5', 'city', 'age', 'quantity', 'sale_price')
 		exclude = ["seller"]
 
 class AddressForm(ModelForm):

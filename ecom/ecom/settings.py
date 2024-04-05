@@ -46,8 +46,14 @@ INSTALLED_APPS = [
     'cart',
     'crispy_forms',
     'crispy_bootstrap5',
+    "phonenumber_field",
 ]
-
+PHONENUMBER_DEFAULT_REGION = "IN"
+PHONENUMBER_DB_FORMAT = "NATIONAL"
+DURATIONFIELD_ALLOW_YEARS = True
+DURATIONFIELD_ALLOW_MONTHS = True
+# DURATIONFIELD_ALLOW_DAYS = True
+# DURATIONFIELD_ALLOW_HOURD = True
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
