@@ -1,12 +1,15 @@
 # Create your models here.
 from django.db import models
 from django.core.validators import RegexValidator
-
+# from django.contrib.auth import get_user_model
+# User = get_user_model()
 # from django.utils.text import slugify
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 import datetime
 from phonenumber_field.modelfields import PhoneNumberField
 from indian_cities.dj_city import cities
+from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import BaseUserManager
 # from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
@@ -49,6 +52,40 @@ STATE_CHOICES = (
    ("UK","Uttarakhand"),
    ("WB","West Bengal")
 )
+class UserManager(BaseUserManager):
+    use_in_migrations = True
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('The Email field must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_active', True)
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+        return self.create_user(email, password, **extra_fields)
+class User(AbstractUser):
+  
+#   username = models.CharField(max_length = 50, unique = True)
+  email = models.EmailField('email address', unique = True, blank=False)
+#   native_name = models.CharField(max_length = 5)
+  first_name = models.CharField(max_length=20, blank=False)
+  last_name = models.CharField(max_length=20, blank=False)
+#   phone_no = models.CharField(max_length = 10)
+  USERNAME_FIELD = 'email'
+  REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+  objects = UserManager()
+  def __str__(self):
+      return "{}".format(self.email)
+  def get_full_name(self) -> str:
+      return super().get_full_name()
 
 class Category(models.Model):
     name = models.CharField(max_length=50,unique=True)
@@ -63,7 +100,7 @@ def get_default_category():
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    city = models.CharField(max_length=20, choices=cities)
+    # city = models.CharField(max_length=20, choices=cities)
     phone = PhoneNumberField()
 
     def __str__(self):
@@ -110,6 +147,7 @@ class Product(models.Model):
     id = models.AutoField(primary_key=True)
     p_name = models.CharField("Product name",max_length=100)
     m_name = models.CharField("Name of the manufacturing company",max_length=100, default='unknown', blank=True)
+    is_light = models.BooleanField("Can you ship to other city?",default=False)
     seller = models.ForeignKey(Customer, on_delete=models.CASCADE)
     sale_price = models.PositiveBigIntegerField(default=0)
     # price = models.DecimalField(default=0, decimal_places=2, max_digits=6)

@@ -1,19 +1,38 @@
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .models import Product, Category, Address
+from .models import Product, Category, Address,User
 from django.forms import ModelForm
-from phonenumber_field.modelfields import PhoneNumberField
+# from phonenumber_field.modelfields import PhoneNumberField
+from phonenumber_field.formfields import PhoneNumberField
+
+from phonenumber_field.widgets import PhoneNumberPrefixWidget
 
 
 
-class SignUpForm(UserCreationForm):
+class SignUpForm(UserCreationForm, forms.Form):
 	# email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email Address'}))
 	# first_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First Name'}))
 	# last_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Last Name'}))
 	# city = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'City'}))
-	# phone = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Phone'}))
+	# phone= PhoneNumberField(attrs={"size": 10, "title": "Your name"})
+	phone = PhoneNumberField(region="IN", widget=PhoneNumberPrefixWidget(
+		country_choices=[("IN", "+91")],
+		attrs={'class':'form-control', 'placeholder':'Phone number'}
+	))
+ 	# phone = PhoneNumberField(region="IN",
 
+    #     widget=PhoneNumberPrefixWidget(
+
+    #         country_choices=[
+
+    #              ("IN", "+91"),
+
+    #         ],
+	# 		attrs={'class':'form-control', 'placeholder':'Phone number'}
+    #     ),)
+	# phone = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Phone'}))
+    # phone = PhoneNumberField()
 	class Meta:
 		model = User
 		fields = ('username','first_name', 'last_name', 'password1', 'password2','email')
@@ -49,6 +68,9 @@ class SignUpForm(UserCreationForm):
 		self.fields['phone'].widget.attrs['class'] = 'form-control'
 		self.fields['phone'].widget.attrs['placeholder'] = 'Phone'
 		self.fields['phone'].label = ''
+		# self.fields['city'].widget.attrs['class'] = 'form-control'
+		# self.fields['city'].widget.attrs['placeholder'] = 'City'
+		# self.fields['city'].label = ''
 
 class ProductForm(ModelForm):
 	# p_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Product Name'}))
@@ -62,7 +84,7 @@ class ProductForm(ModelForm):
 	# sale_price = forms.DecimalField(label="", max_digits=6, decimal_places=2, widget=forms.NumberInput(attrs={'class':'form-control', 'placeholder':'Sale Price'}))
 	class Meta:
 		model = Product
-		fields = ('p_name','m_name', 'price', 'category', 'description', 'image1','image2','image3','image4','image5', 'city', 'age', 'quantity', 'sale_price')
+		fields = ('p_name','m_name','quantity', 'price','sale_price','city','is_light', 'category', 'description', 'image1','image2','image3','image4','image5', 'age' )
 		exclude = ["seller"]
 
 class AddressForm(ModelForm):

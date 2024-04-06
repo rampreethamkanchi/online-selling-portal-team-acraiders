@@ -164,9 +164,9 @@ def about(request):
 
 def login_user(request):
     if request.method == "POST":
-        username=request.POST['username']
+        email=request.POST['email']
         password=request.POST['password']
-        user=authenticate(request,username=username,password=password)
+        user=authenticate(request,email=email,password=password)
         if user is not None:
             login(request,user)
             messages.success(request,("you have beeen logged in ..."))
@@ -197,14 +197,14 @@ def register_user(request):
         if form.is_valid() and form1.is_valid():
             # form.save()
             print('form is valid....')
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password1']
             email = form.cleaned_data['email']
-            if(is_email_present(email)):
+            password = form.cleaned_data['password1']
+            # email = form.cleaned_data['email']
+            # if(is_email_present(email)):
                 #checking if user already exists
-                user=authenticate(username=username,password=password,email=email)
+            user=authenticate(password=password,email=email)
                 # print(user)
-                if user is None:     
+            if user is None:     
                     print('creating user....')     
                     user = form.save()    
                     customer=Customer.objects.create(
@@ -228,11 +228,11 @@ def register_user(request):
                     print("email sent")
                     messages.success(request,("you have Registered ..."))
                     return redirect('home')
-                else:
-                    messages.success(request,("Sorry, couldn't reach server. Please try again...."))
             else:
-                messages.success(request,("Sorry...... entered email is already in use. Try logging in....or enter new email...."))
-                return redirect('register')
+                    messages.success(request,("Sorry, couldn't reach server. Please try again...."))
+            # else:
+            #     messages.success(request,("Sorry...... entered email is already in use. Try logging in....or enter new email...."))
+            #     return redirect('register')
         else:
             # messages.success(request,("Whoops...... Form data is invalid...."))
             messages.success(request,(str(form.errors)))
