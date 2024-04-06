@@ -167,7 +167,9 @@ def login_user(request):
         email=request.POST['email']
         password=request.POST['password']
         user=authenticate(request,email=email,password=password)
-        if user is not None:
+        #if there is a customer for this user, then only login
+
+        if user is not None and Customer.objects.filter(user=user).exists():
             login(request,user)
             messages.success(request,("you have beeen logged in ..."))
             return redirect('home')
