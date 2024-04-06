@@ -15,7 +15,7 @@ import json
 from django.core.mail import send_mail
 from django.core.mail import EmailMessage
 from django.conf import settings
-def send_mail(email, message):
+def send_email(email, message):
     emailObject = EmailMessage(
                 'Message from Acraiders',
                 message,
@@ -217,6 +217,7 @@ def register_user(request):
                     address.customer = customer
                     print('creating address....')
                     address.save()
+                    send_email(email,"successfully registered")
                     login(request,user)
                     # emailObject = EmailMessage(
                     #     'Thanks for registering into Acraiders',
