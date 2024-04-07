@@ -29,4 +29,5 @@ urlpatterns = [
     path('request/',views.request,name='request'),
     path('accept_request/',views.accept_request, name='accept_request'),
     path('reject_request/', views.reject_request, name='reject_request'),
+    path('change_password/',views.change_password,name='change_password'),
 ] 

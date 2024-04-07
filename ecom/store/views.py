@@ -15,6 +15,25 @@ import json
 from django.core.mail import send_mail
 from django.core.mail import EmailMessage
 from django.conf import settings
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+@login_required(login_url='login')
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            print(user)
+            update_session_auth_hash(request,form.user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('profile')
+        else:
+            messages.success(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(user=request.user)
+    return render(request, 'change_password.html', {
+        'form': form
+    })
 def send_email(email, message):
     emailObject = EmailMessage(
                 'Message from Acraiders',
@@ -168,7 +187,7 @@ def login_user(request):
         password=request.POST['password']
         user=authenticate(request,email=email,password=password)
         #if there is a customer for this user, then only login
-        
+
         if user is not None and Customer.objects.filter(user=user).exists():
             login(request,user)
             messages.success(request,("you have beeen logged in ..."))
