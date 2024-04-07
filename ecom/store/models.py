@@ -74,7 +74,8 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
   
 #   username = models.CharField(max_length = 50, unique = True)
-  email = models.EmailField('email address', unique = True, blank=False)
+  email = models.EmailField('email address', primary_key=True)
+#   email = models.EmailField('email address', unique = True, blank=False)
 #   native_name = models.CharField(max_length = 5)
   first_name = models.CharField(max_length=20, blank=False)
   last_name = models.CharField(max_length=20, blank=False)
@@ -101,7 +102,7 @@ def get_default_category():
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     # city = models.CharField(max_length=20, choices=cities)
-    phone = PhoneNumberField()
+    phone = PhoneNumberField(unique=True)
 
     def __str__(self):
         return str(self.user)
@@ -113,7 +114,7 @@ class Manager(models.Model):
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     city = models.CharField(max_length=20, choices=cities)
-    phone = PhoneNumberField()
+    phone = PhoneNumberField(unique=True)
     state = models.CharField(max_length=50, choices=STATE_CHOICES)
     pincode = models.CharField(
         max_length=6,
