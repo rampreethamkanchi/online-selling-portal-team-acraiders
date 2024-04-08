@@ -9,8 +9,13 @@
 <div class=container style="flex: 1;">
     <div class="card mb-3">
         <div class="row g-0">
-            <div class="col-md-4">
-                <img src="{{delivery.product.image.url }}" class="img-fluid rounded-start" alt="..." style="width: 100%; height: 100%;">
+            <div class="col-md-4 d-flex justify-content-center align-items-center">
+                <img
+                    src="{{ delivery.product.image1.url }}"
+                    class="img-fluid rounded-start"
+                    alt="..."
+                    style="max-width: 100%; margin-left: 4%;"
+                />
             </div>
             <div class="col-md-8">
                 <div class="card-body">
@@ -36,15 +41,48 @@
                             <!-- <span style="font-size: 48px;">Order details</span> -->
                             <p><b>Order ID : </b>{{delivery.id}} </p>
                             <p><b>Price requested : </b> {{delivery.cost}} </p>
+                            <p><b>Sale Price : </b> {{delivery.product.sale_price}} </p>
                             <p><b>Quantity requested : </b> {{delivery.quantity}} </p>
-                            <p><b>Message sent by user : </b> {{delivery.customer_message}}</p>
+                            <!-- <p><b>Message sent by user : </b> {{delivery.customer_message}}</p> -->
                             <p><b>Date of requesting : </b> {{delivery.date}}</p>
-                            <input type="text" class="form-control message-box mb-3" name="seller_message" rows="1" placeholder="Type your message here..." ></textarea>
+                            <div style="text-align: center;"><h5><b>Chat : </b></h5></div>
+                            {% for msg in chats %}
+                                {% if msg.customer.user.username == requested.customer.user.username %}
+                                <p style="text-align: center;"><b>Message Sent By you:</b> {{ msg.message }}</p>
+                                {% else %}
+                                <p><b>Message Sent By {{msg.customer.user.username}}:</b> {{ msg.message }}</p>
+                                {% endif %}
+                            {% endfor %}
+                            <input type="text" class="form-control message-box mb-3" name="customer_message" rows="1" placeholder="Type your message here..." ></textarea>
                         </div>
                         <div style="text-align: center;">
-                            <button type="submit" class="btn btn-success" style="margin-bottom: 2%;">Accept</button>
-                            <button type="submit" formaction="{%url 'reject_request' %}" class="btn btn-primary" style="margin-bottom: 2%;">Negotiate</button>
-                            <button type="submit" formaction="{%url 'reject_request' %}" class="btn btn-danger" style="margin-bottom: 2%;">Reject</button>
+                            <!-- <button type="submit" class="btn btn-success" style="margin-bottom: 2%;">Accept</button> -->
+                            <!-- <button type="submit" formaction="{%url 'reject_request' %}" class="btn btn-primary" style="margin-bottom: 2%;">Negotiate</button> -->
+                            <!-- <button type="submit" formaction="{%url 'reject_request' %}" class="btn btn-danger" style="margin-bottom: 2%;">Reject</button> -->
+                            <input
+                            type="submit"
+                            class="btn btn-success"
+                            style="margin-top: 2%"
+                            id="sendRequests"
+                            
+                            value="Accept"
+                            >
+                            <input
+                            type="submit"
+                            class="btn btn-primary"
+                            style="margin-top: 2%"
+                            id="sendRequests"
+                            formaction="{%url 'add_chat_seller' %}"
+                            value="Negotiate"
+                            >
+                            <input
+                            type="submit"
+                            class="btn btn-danger"
+                            style="margin-top: 2%"
+                            id="sendRequests"
+                            formaction="{%url 'reject_request' %}"
+                            value="Reject"
+                            >
                         </div>
                     </div>
                     <br/><br/>

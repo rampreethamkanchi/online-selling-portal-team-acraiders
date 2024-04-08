@@ -138,12 +138,6 @@ class Manager(models.Model):
         self.user.is_staff = True
         self.user.save(update_fields=['is_superuser', 'is_staff'])
 
-# @receiver(post_save, sender=Manager)
-# def manager_created(sender, instance, created, **kwargs):
-#     if created:
-#         g = Group.objects.get(name='Manager')
-#         g.user_set.add(instance.user)
-#         print('Manager added to Managers group')
 class Product(models.Model): 
     id = models.AutoField(primary_key=True)
     p_name = models.CharField("Product name",max_length=100)
@@ -166,8 +160,6 @@ class Product(models.Model):
     age = models.DurationField("Age of product",default=datetime.timedelta(0),blank=True)
     # quantity = models.IntegerField(default=1,blank=True)
     quantity = models.PositiveBigIntegerField(default=1,blank=True)
-    # age = models.TimeField(default=datetime.time(0, 0))
-    # slug = models.SlugField(unique=True, max_length=100,)
 
     # Add sales stuff
     is_sale = models.BooleanField(default=True)
@@ -188,7 +180,7 @@ class Address(models.Model):
     house_no = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
-        return self.city
+        return str(self.customer)
     class Meta:
         verbose_name_plural = 'addresses'
 
@@ -234,3 +226,13 @@ class Chat(models.Model):
     request = models.ForeignKey(Request, on_delete=models.CASCADE)
     def __str__(self):
         return str(self.message)
+    
+class Issue(models.Model):
+    request = models.ForeignKey(Request, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    seller = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='seller')
+    description = models.TextField()
+    date = models.DateField(default=datetime.date.today, blank=True)
+    status = models.BooleanField(default=False,blank=True)
+    def __str__(self):
+        return str(self.request)

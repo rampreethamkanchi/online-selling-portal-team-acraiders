@@ -1,18 +1,19 @@
 {% extends 'base.html' %} {% block content %}
 
 <br /><br />
-
+<form class="container" style="flex: 1" action="{%url 'issue' %}" method="post">
+  {% csrf_token %}
 <div class="container" style="flex: 1;">
   <div class="card mb-3">
     <div class="row g-0">
-      <div class="col-md-4">
+      <div class="col-md-4 d-flex justify-content-center align-items-center">
         <img
-          src="{{ ordered.product.image.url }}"
-          class="img-fluid rounded-start"
-          alt="..."
-          style="width: 100%; height: 100%;"
+            src="{{ ordered.product.image1.url }}"
+            class="img-fluid rounded-start"
+            alt="..."
+            style="max-width: 100%; margin-left: 4%;"
         />
-      </div>
+    </div>
       <div class="col-md-8">
         <!-- <div class="card-body">
           <h5 class="card-title text-center">{{ ordered.product.p_name }}</h5>
@@ -80,31 +81,14 @@
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                      <div class="menu">
-                        <div class="menu-option" onclick="toggleContent('option1')">
-                          <input type="checkbox" class="checkbox">
-                          Option 1
-                        </div>
-                          <div id="option1Content" class="expanded-content">
-                            Expanded content for Option 1
-                          </div>
-                          <div class="menu-option" onclick="toggleContent('option2')">Option 2</div>
-                            <div id="option2Content" class="expanded-content">
-                              Expanded content for Option 2
-                            </div>
-                            <div class="menu-option" onclick="toggleContent('option3')">Option 3</div>
-                            <div id="option3Content" class="expanded-content">
-                              Expanded content for Option 3
-                            </div>
-                            <div class="menu-option" onclick="toggleContent('option4')">Option 4</div>
-                            <div id="option4Content" class="expanded-content">
-                              Expanded content for Option 4
-                            </div>
-                          </div>
+                      <input type="hidden" name="request_id" value="{{ordered.id}}">
+                          <h5 ><b >Please Enter your Quieries below</b> </h5>
+                          <input type="text" class="form-control message-box mb-3" name="description" rows="1" required placeholder="Type your issue here..." style="margin-top: 4%;">
+
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Submit</button>
+                          <button type="submit" class="btn btn-primary">Submit</button>
                         </div>
                       </div>
                     </div>
@@ -115,6 +99,7 @@
     </div>
   </div>
 </div>
+</form>
 <style>
   /* Style for the menu options */
   .menu-option {

@@ -1,0 +1,133 @@
+{% extends 'base.html' %} 
+{% block content %}
+<br /><br />
+
+<form class="container" style="flex: 1" action="{%url 'add_chat_buyer' %}" method="post">
+  <div class="card mb-3">
+      {% csrf_token %}
+    <div class="row g-0">
+      <!-- <div class="col-md-4" style="text-align: center;">
+        <img
+          src="{{ products.image1.url }}"
+          class="img-fluid rounded-start"
+          alt="..."
+          style="display: inline-block; max-width: 100%;"
+        />
+      </div> -->
+      <div class="col-md-4 d-flex justify-content-center align-items-center">
+        <img
+            src="{{ requested.product.image1.url }}"
+            class="img-fluid rounded-start"
+            alt="..."
+            style="max-width: 100%; margin-left: 4%;"
+        />
+    </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title text-center">{{ requested.product.p_name }}</h5>
+          <p class="card-title text-center">{{requested.product.description}}</p>
+          <br />
+          {% if requested.product.is_sale %}
+          <div class="d-flex justify-content-center small text-warning mb-2">
+            <div class="bi-star-fill"></div>
+            &nbsp;&nbsp;Sale!!&nbsp;&nbsp;
+            <!-- <div class="bi-star-fill"></div> -->
+          </div>
+
+          <!-- Product price-->
+          <p class="text-center">
+            <strike>₹{{requested.product.price}}</strike>&nbsp;₹{{requested.product.sale_price}}
+          </p>
+
+          {% else %} 
+          <!-- ₹{{products.price}}  -->
+          <p class="text-center">
+            <strike>₹{{requested.product.price}}</strike>&nbsp;₹{{requested.product.sale_price}}
+          </p>
+          {% endif %}
+          <br /><br />
+          <div class="row justify-content-center" id="qty-cart">
+            <!-- <div class="col-md-2">Quantity:</div>
+            <div class="col-md-2">
+              <select class="form-select" id="Quantity_option">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select>
+            </div> -->
+            <input type="hidden" name="request_id" value="{{requested.id}}">
+            <div style="text-align: center;"><b>Quantity Requested : </b>{{requested.quantity}}</div>
+          </div>
+          <br>
+          <div style="text-align: center;"><h5><b>Chat : </b></h5></div>
+            {% for msg in chats %}
+                {% if msg.customer.user.username == requested.customer.user.username %}
+                <p style="text-align: center;"><b>Message Sent By you:</b> {{ msg.message }}</p>
+                {% else %}
+                <p style="text-align: center;"><b>Message Sent By Seller:</b> {{ msg.message }}</p>
+                {% endif %}
+            {% endfor %}
+            <p style="text-align: center">
+              <b>Enter the negiotating price:</b>&nbsp; &nbsp;<input
+                type="number"
+                id="bidAmount"
+                name="product_cost"
+              />
+            </p>
+          <div class="container mt-0">
+            <div class="row">
+              <div class="col-md-8 mx-auto">
+                <div class="card" style="border: none;">
+                  <div class="card-body">
+                    <input type="text" class="form-control message-box mb-3" name="customer_message" rows="1" placeholder="Type your message here..."></textarea>
+                    <!-- <button class="btn btn-primary btn-block">Send</button> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>          
+          <div style="text-align: center">
+            <input
+              type="submit"
+              class="btn btn-primary"
+              style="margin-top: 2%"
+              id="sendRequests"
+              value="Negotiate"
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  <!-- <form class="container" style="flex: 1" action="{%url 'issue' %}" method="post">
+    {% csrf_token %}
+    <div style="text-align: center;">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="margin-bottom: 2%; text-align: center;">
+      issues
+    </button>
+  </div>
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Quick Fixes</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="request_id" value="{{requested.id}}">
+              <h5 ><b >Please Enter your Quieries below</b> </h5>
+              <input type="text" class="form-control message-box mb-3" name="description" rows="1" required placeholder="Type your issue here..." style="margin-top: 4%;">
+  
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  </form> -->
+</div>
+</form>
+{% endblock %}

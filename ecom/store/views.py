@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import Category, Product, Customer, Order, Request,Chat
+from .models import Category, Product, Customer, Order, Request,Chat,Issue
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -26,6 +26,7 @@ def change_password(request):
             print(user)
             update_session_auth_hash(request,form.user)  # Important!
             messages.success(request, 'Your password was successfully updated!')
+            send_email(user.email,'Alert! Password changed','Your password has been changed successfully. If you did not make this change, please contact us immediately. You can login here http://localhost:8000/login')
             return redirect('profile')
         else:
             messages.success(request, 'Please correct the error below.')
@@ -34,9 +35,9 @@ def change_password(request):
     return render(request, 'change_password.html', {
         'form': form
     })
-def send_email(email, message):
+def send_email(email,subject, message):
     emailObject = EmailMessage(
-                'Message from Acraiders',
+                subject,
                 message,
                 settings.EMAIL_HOST_USER,
                 [email],
@@ -55,7 +56,20 @@ def category(request,foo):
 @login_required(login_url='login')
 def product(request,pk):
     products = Product.objects.get(id=pk)
-    return render(request,'product.html',{'products': products})
+    customer_is_seller = True
+    can_deliver = True
+    #check if customer can request for product, by checking 
+    #if product is not owned by customer
+    if products.seller != request.user.customer:
+        customer_is_seller = False
+    if not products.is_light:
+        seller_address = products.seller.address_set.all()[0]
+        customer_address = request.user.customer.address_set.all()[0]
+        if seller_address.city != customer_address.city:
+            can_deliver = False
+        # if products.seller.city != request.user.customer.city:
+        #     can_deliver = False
+    return render(request,'product.html',{'products': products,can_deliver:can_deliver, 'customer_is_seller':customer_is_seller})
 @login_required(login_url='login')
 def home(request):
     products = Product.objects.all()
@@ -74,6 +88,7 @@ def edit_profile(request):
     addresses = customer.address_set.all()
     address = addresses[0]
     return render(request,'edit_profile.html',{'customer': customer, 'address': address})
+@login_required(login_url='login')
 @login_required(login_url='login')
 def orders(request):
     # products = Product.objects.all()
@@ -98,6 +113,48 @@ def my_requests(request):
     pending_requests = request.user.customer.request_set.filter(status='pending')
     return render(request,'my_requests.html',{'accepted_requests': accepted_requests , 'rejected_requests': rejected_requests , 'pending_requests': pending_requests})
 @login_required(login_url='login')
+def negotiate_expanded(request,pk):
+    # accepted_requests = request.user.customer.request_set.filter(status='accepted')
+    # rejected_requests = request.user.customer.request_set.filter(status='rejected')
+    # pending_requests = request.user.customer.request_set.filter(status='pending')
+    requested = Request.objects.get(id=pk)
+    chats = requested.chat_set.all().order_by('created_at')
+    return render(request,'negotiate_expanded.html',{'requested': requested,"chats":chats})
+@login_required(login_url='login')
+def add_chat_buyer(request):
+    if request.method == "POST":
+        request_id= request.POST['request_id']
+        customer_message = request.POST['customer_message']
+        product_cost = request.POST['product_cost']
+        pending_chat = Chat()
+        pending_chat.customer= request.user.customer
+        pending_chat.request = Request.objects.get(id=request_id)
+        pending_chat.message= customer_message
+        pending_chat.save()
+        requested = Request.objects.get(id=request_id)
+        requested.cost = product_cost
+        requested.save()
+        # chats = requested.chat_set.all().order_by('created_at')
+        # redirect(f"negotiate_expanded/")
+        # return render(request,'negotiate_expanded.html',{'requested': requested,"chats":chats})
+        return redirect('my_requests')
+        # return 
+@login_required(login_url='login')
+def add_chat_seller(request):
+    if request.method == "POST":
+        request_id= request.POST['request_id']
+        customer_message = request.POST['customer_message']
+        pending_chat = Chat()
+        pending_chat.customer= request.user.customer
+        pending_chat.request = Request.objects.get(id=request_id)
+        pending_chat.message= customer_message
+        pending_chat.save()
+        requested = Request.objects.get(id=request_id)
+        chats = requested.chat_set.all().order_by('created_at')
+        return redirect('user_requests')
+        # redirect(f"negotiate_expanded/")
+        # return render(request,'seller_accepted_expanded.html',{'delivery': requested,"chats":chats})
+@login_required(login_url='login')
 def success_requests_expanded(request,pk):
     # deliveries = Order.objects.filter(product__seller=request.user.customer)
     # seller_details=deliveries.get(id=pk)
@@ -106,6 +163,7 @@ def success_requests_expanded(request,pk):
     address = addresses[0]
     requested = Request.objects.get(id=pk)
     chats = requested.chat_set.all().order_by('created_at')
+    # return redirect(request,'success_requests_expanded.html',{'requested': requested , 'customer': customer, 'address': address, 'chats':chats })
     return render(request,'success_requests_expanded.html',{'requested': requested , 'customer': customer, 'address': address, 'chats':chats })
 @login_required(login_url='login')
 def products(request):
@@ -126,8 +184,9 @@ def seller_accepted_expanded(request,pk):
     # customer = request.delivery.customer
     requests = Request.objects.get(id=pk)
     addresses = requests.customer.address_set.all()
+    chats = requests.chat_set.all().order_by('created_at')
     address = addresses[0]
-    return render(request,'seller_accepted_expanded.html',{'delivery': requests , 'address': address })
+    return render(request,'seller_accepted_expanded.html',{'delivery': requests , 'address': address,'chats':chats })
 @login_required(login_url='login')
 def deliveries(request):
     deliveries = Order.objects.filter(product__seller=request.user.customer)
@@ -238,23 +297,30 @@ def register_user(request):
                     address.customer = customer
                     print('creating address....')
                     address.save()
-                    send_email(email,"successfully registered")
-                    login(request,user)
-                    # emailObject = EmailMessage(
-                    #     'Thanks for registering into Acraiders',
-                    #     'We are happy to have you onboard',
-                    #     settings.EMAIL_HOST_USER,
-                    #     [email],
-                    # )
-                    # emailObject.send(fail_silently=True)
-                    print("email sent")
-                    messages.success(request,("you have Registered ..."))
-                    return redirect('home')
+                    subject = 'Welcome to Acraiders - Your One-Stop Online Sales Portal!'
+                    message = f'''Dear {user.first_name},
+                    Welcome to Acraiders, your ultimate destination for all your buying and selling needs! We are thrilled to have you join our growing community of users who value convenience, diversity, and seamless transactions.
+                    As a member of Acraiders, you now have access to a wide array of products across various categories, all available at your fingertips. Whether you're searching for the latest electronics, timeless books, a new home, or anything in between, Acraiders is your one-stop shop for all things buying and selling.
+                    Here are some key highlights of what Acraiders has to offer:
+                    1. **Effortless Categorization:** Navigate through our platform effortlessly with our intuitive categorization system, designed to make your shopping experience smooth and enjoyable.
+                    2. **Tailored User Accounts:** Whether you're a manager overseeing operations or a customer looking to buy or sell, our platform provides personalized user accounts tailored to your specific needs.
+                    3. **Empowering Sellers:** Showcase your items with detailed listings, including high-quality photos, accurate pricing, manufacturing details, and more, to attract potential buyers and maximize your sales potential.
+                    4. **Enriched Buyer Experience:** Search for your desired items, negotiate prices, and securely complete transactions online, all within the comfort of your own home.
+                    5. **Responsive Management:** Our dedicated managers are here to support you every step of the way, ensuring a seamless experience for both buyers and sellers alike.
+                    Your account credentials . Here are your login details:
+                    - **User ID:** {user.username}
+                    - **Email Address:** {user.email}
+                    - **Password:** [Hidden for security purposes]
+                    - **Phone Number:** {customer.phone}
+                    For your security, we recommend changing your password upon your first login. Please ensure to keep your login credentials confidential to maintain the security of your account.
+                    Should you have any questions, require assistance, or simply want to provide feedback, our friendly support team is here to help. Feel free to reach out to us at [Support Email or Contact Number], and we'll be more than happy to assist you.
+                    Once again, welcome to Acraiders! We're excited to have you on board and look forward to serving you as you embark on your buying and selling journey with us.
+                    Best regards,
+                    Team Acraiders'''
+                    send_email(email,subject, message)
             else:
                     messages.success(request,("Sorry, couldn't reach server. Please try again...."))
-            # else:
-            #     messages.success(request,("Sorry...... entered email is already in use. Try logging in....or enter new email...."))
-            #     return redirect('register')
+                    return redirect('register')
         else:
             # messages.success(request,("Whoops...... Form data is invalid...."))
             messages.success(request,(str(form.errors)))
@@ -319,7 +385,7 @@ def buy(request):
             # print(product_price)
             product_qty = request.POST['product_qty']
             print(product_qty)
-            # seller_email= product.seller.user.email
+            seller_email= product.seller.user.email
             #compare integer values of product_qty and product_price
             #cast string to its integer value
             product_qty = int(product_qty)
@@ -335,7 +401,7 @@ def buy(request):
             cost = product_price
             print(cost)
             customer = request.user.customer
-            # customer_email = request.user.email
+            customer_email = request.user.email
             pending_order = Order()
             pending_order.product = Product.objects.get(id=product_id)
             pending_order.customer = request.user.customer
@@ -360,6 +426,10 @@ def buy(request):
             #             [seller_email],
             #         )
             # emailObject2.send(fail_silently=True)
+            #send mail to customer
+            send_email(customer_email,'Your order is placed','Check order details here http://localhost:8000/my_orders')
+            #send mail to seller
+            send_email(seller_email,'Your got an order','Check order details here http://localhost:8000/my_deliveries')
             messages.success(request,("buy successful..."))
             return redirect('orders')
             # we have to return status code 200 to ajax call
@@ -398,9 +468,11 @@ def request(request):
             pending_request.cost = product_cost
             pending_request.customer_message = customer_message
             success_request=pending_request.save()
+            added_request_id = pending_request.id
+            added_request = Request.objects.get(id=added_request_id)
             pending_chat = Chat()
             pending_chat.customer= request.user.customer
-            pending_chat.request = success_request
+            pending_chat.request = added_request
             pending_chat.message= customer_message
             pending_chat.save()
             # chat = Chat.objects.create(message=customer_message,customer=request.user.customer,request=success_request)
@@ -430,13 +502,13 @@ def accept_request(request):
         try:
             request_id = request.POST['request_id']
             print(request_id)
-            seller_message = request.POST['seller_message']
-            print(seller_message)
+            # seller_message = request.POST['seller_message']
+            # print(seller_message)
             pending_request = Request.objects.get(id = request_id)
             print(pending_request)
             
             pending_request.status= 'accepted'
-            pending_request.seller_message= seller_message
+            # pending_request.seller_message= seller_message
             pending_request.save()
             request =  request.POST['request_id']
             # customer_email = request.customer.user.email
@@ -462,10 +534,10 @@ def reject_request(request):
         print('post requested....')
         try:
             request_id = request.POST['request_id']
-            seller_message = request.POST['seller_message']
+            # seller_message = request.POST['seller_message']
             pending_request = Request.objects.get(id = request_id)
             pending_request.status= 'rejected'
-            pending_request.seller_message= seller_message
+            # pending_request.seller_message= seller_message
             pending_request.save()
             request =  request.POST['request_id']
             # customer_email = request.customer.user.email
@@ -481,6 +553,37 @@ def reject_request(request):
         except Exception as e:
             print(e)
             # messages.success(request,("reject failure...try again..."))
+            return HttpResponse(status=400)
+    else:
+        return redirect('home')
+    
+@login_required(login_url='login')
+def issue(request):
+    if request.method == "POST":
+        print('post requested....')
+        try:
+            request_id = request.POST['request_id']
+            print("1")
+            print(request.POST)
+            description = request.POST['description']
+            print("2")
+
+            pending_request = Request.objects.get(id = request_id)
+            print("3")
+
+            pending_issue = Issue()
+            print("4")
+
+            pending_issue.request = pending_request
+            pending_issue.customer = request.user.customer
+            pending_issue.seller = pending_request.product.seller
+            pending_issue.description = description
+            pending_issue.save()
+            messages.success(request,("issue raised..."))
+            return redirect('my_requests')
+        except Exception as e:
+            print(e)
+            messages.success(request,("issue failure...try again..."))
             return HttpResponse(status=400)
     else:
         return redirect('home')

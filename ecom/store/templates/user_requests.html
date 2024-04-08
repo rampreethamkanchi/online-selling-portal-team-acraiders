@@ -15,7 +15,7 @@
                      <!-- Sale badge-->
                 <!-- <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div> -->
                     <!-- Product image-->
-                    <img class="card-img-top" src="{{order.product.image.url}}" alt="..." style="height: 230px;" />
+                    <img class="card-img-top" src="{{order.product.image1.url}}" alt="..." style="height: 230px;" />
                     <!-- Product details-->
                     <div class="card-body p-4">
                         <div class="text-center" >
@@ -31,7 +31,7 @@
                         <div style="margin-bottom: 10px;"><b>Quantity Requested: </b>{{order.quantity}}</div>
                         <div style="margin-bottom: 10px;"><b>Requested Price: </b>{{order.cost}}</div>
                         <div style="margin-bottom: 10px;"><b>Date of Requesting: </b>{{order.date}}</div>
-                        <div style="margin-bottom: 10px;"><b>Message sent by customer: </b>{{order.customer_message}}</div>
+                        <!-- <div style="margin-bottom: 10px;"><b>Message sent by customer: </b>{{order.customer_message}}</div> -->
                         <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'seller_accepted_expanded' order.id %}">view more</a></div>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
             <div class="col mb-5">
                 <div class="card h-100">
                     <!-- Product image-->
-                    <img class="card-img-top" src="{{product.image.url}}" alt="..." />
+                    <img class="card-img-top" src="{{product.image1.url}}" alt="..." />
                     <div class="card-body p-4">
                         <div class="text-center">
                             <!-- Product name-->

@@ -1,4 +1,4 @@
-.env
+# .env
 myenv
 .venv/
 env

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category,Customer,Product,Order,Address,Request,Manager,Chat,User
+from .models import Category,Customer,Product,Order,Address,Request,Manager,Chat,User,Issue
 from django.contrib import admin
 # from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth import get_user_model
@@ -15,6 +15,7 @@ admin.site.register(Address)
 admin.site.register(Request)
 admin.site.register(Manager)
 admin.site.register(Chat)
+admin.site.register(Issue)
 
 
 # class UserAdmin(BaseUserAdmin):

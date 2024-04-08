@@ -30,4 +30,10 @@ urlpatterns = [
     path('accept_request/',views.accept_request, name='accept_request'),
     path('reject_request/', views.reject_request, name='reject_request'),
     path('change_password/',views.change_password,name='change_password'),
+    path('issue/',views.issue,name='issue'),
+    path('add_chat_buyer/',views.add_chat_buyer,name='add_chat_buyer'),
+    path('add_chat_seller/',views.add_chat_seller,name='add_chat_seller'),
+    # path('accept_request/',views.accept_request, name='accept_request'),
+    # path('reject_request/', views.reject_request, name='reject_request'),
+    path('negotiate_expanded/<int:pk>',views.negotiate_expanded,name='negotiate_expanded'),
 ] 
