@@ -65,11 +65,15 @@ def product(request,pk):
     if not products.is_light:
         seller_address = products.seller.address_set.all()[0]
         customer_address = request.user.customer.address_set.all()[0]
+        print(seller_address.city)
+        print(customer_address.city)
+
         if seller_address.city != customer_address.city:
+            print("not same city")
             can_deliver = False
         # if products.seller.city != request.user.customer.city:
         #     can_deliver = False
-    return render(request,'product.html',{'products': products,can_deliver:can_deliver, 'customer_is_seller':customer_is_seller})
+    return render(request,'product.html',{'products': products,'can_deliver':can_deliver, 'customer_is_seller':customer_is_seller})
 @login_required(login_url='login')
 def home(request):
     products = Product.objects.all()
@@ -317,7 +321,8 @@ def register_user(request):
                     Once again, welcome to Acraiders! We're excited to have you on board and look forward to serving you as you embark on your buying and selling journey with us.
                     Best regards,
                     Team Acraiders'''
-                    send_email(email,subject, message)
+                    send_email(user.email,subject, message)
+                    return redirect('home')
             else:
                     messages.success(request,("Sorry, couldn't reach server. Please try again...."))
                     return redirect('register')
@@ -568,7 +573,7 @@ def issue(request):
             description = request.POST['description']
             print("2")
 
-            pending_request = Request.objects.get(id = request_id)
+            pending_request = Order.objects.get(id = request_id)
             print("3")
 
             pending_issue = Issue()

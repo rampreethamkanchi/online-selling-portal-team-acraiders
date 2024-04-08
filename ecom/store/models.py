@@ -228,7 +228,7 @@ class Chat(models.Model):
         return str(self.message)
     
 class Issue(models.Model):
-    request = models.ForeignKey(Request, on_delete=models.CASCADE)
+    request = models.ForeignKey(Order, on_delete=models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     seller = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='seller')
     description = models.TextField()
