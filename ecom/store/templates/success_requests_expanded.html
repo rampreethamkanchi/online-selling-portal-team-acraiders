@@ -109,7 +109,7 @@
                                     const conversionRate = 0.01368;
                                 
                                     // Convert the price from INR to USD
-                                    const priceInINR = parseFloat('{{requested.product.sale_price}}');
+                                    const priceInINR = parseFloat('{{requested.cost}}');
                                     const priceInUSD = priceInINR * conversionRate;
                                 
                                     // Create the order
